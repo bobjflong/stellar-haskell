@@ -1,0 +1,10 @@
+*.hi
+*.o
+CSVPivot
+*.swp
+*.hs.swo
+Main
+dist/
+csvp
+.cabal-sandbox/
+cabal.sandbox.config
