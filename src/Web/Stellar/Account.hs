@@ -3,22 +3,21 @@
 
 module Web.Stellar.Account (
     fetchAccount,
+    MicroStellar(..),
+    Account(..),
     flags,
     ownerCount,
     previousTransactionID,
     previousTxnLgrSeq,
     stellarSequence,
     stellarIndex,
-    balance,
-    MicroStellar(..),
-    Account(..)
+    balance
   ) where
 
 import           Control.Applicative
 import           Control.Lens        hiding ((.=))
 import           Data.Aeson
 import           Data.Text
-import           Debug.Trace
 import           Lens.Family
 import           Web.Stellar.Request
 
@@ -45,7 +44,7 @@ import           Web.Stellar.Request
 -- >>> account ^. stellarIndex
 -- "6047FB9C7976F2D0554618F5ABFF423E7136205BAF19E92BE9D295E549442C45"
 data Account = Account {
-  _balanceData           :: String,
+  _balanceData           :: Text,
   _flags                 :: Int,
   _ownerCount            :: Int,
   _previousTransactionID :: Text,
@@ -61,10 +60,10 @@ data MicroStellar = MicroStellar Int | Unparseable deriving (Show)
 
 balance :: Lens' Account MicroStellar
 balance = lens getBalance setBalance
-  where getBalance acc = case (reads (_balanceData acc) :: [(Int, String)]) of
+  where getBalance acc = case (reads (unpack $ _balanceData acc) :: [(Int, String)]) of
                            [(a,"")] -> MicroStellar a
                            _ -> Unparseable
-        setBalance a (MicroStellar x) = a { _balanceData = (show x) }
+        setBalance a (MicroStellar x) = a { _balanceData = (pack $ show x) }
         setBalance a _ = a { _balanceData = "unknown" }
 
 instance FromJSON Account where

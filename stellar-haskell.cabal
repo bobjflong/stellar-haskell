@@ -16,7 +16,7 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
-  exposed-modules:     Web.Stellar.Account, Web.Stellar.Request
+  exposed-modules:     Web.Stellar.Account, Web.Stellar.Request, Web.Stellar.AccountLine
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base >=4.7 && <4.8, wreq, lens, bytestring, text, aeson, lens-family-core, lens-family-th
