@@ -4,7 +4,6 @@
 
 module Web.Stellar.AccountLine (
     fetchAccountLines,
-    Money,
     AccountLine(..),
     otherAccount,
     balance,
@@ -21,6 +20,7 @@ import           Data.Text
 import           Debug.Trace
 import           Lens.Family         hiding ((.~), (^.))
 import           Web.Stellar.Request
+import           Web.Stellar.Types
 
 -- | Provides a lens interface onto a Stellar Trust Line
 --
@@ -32,7 +32,7 @@ import           Web.Stellar.Request
 --
 -- >>> acc ^. currency
 -- "BTC"
--- 
+--
 -- >>> acc ^. limit
 -- Just 0.000000000000
 --
@@ -44,7 +44,7 @@ data AccountLine = AccountLine {
   _currency      :: Text,
   _limitData     :: Text,
   _limitPeerData :: Text
-} deriving (Show)
+} deriving (Show, Eq)
 
 $(makeLenses ''AccountLine)
 
@@ -55,14 +55,6 @@ instance FromJSON AccountLine where
     <*> v .: "currency"
     <*> v .: "limit"
     <*> v .: "limit_peer"
-
-type Money = Fixed E12
-
-moneyLens :: (Lens' AccountLine Text) -> Lens' AccountLine (Maybe Money)
-moneyLens l = lens g s
-  where g v = textToFixed $ v ^. l
-        s v (Just x) = l .~ ((pack.show) x) $ v
-        s v _ = l .~ "" $ v
 
 limit :: Lens' AccountLine (Maybe Money)
 limit = moneyLens limitData
@@ -101,7 +93,7 @@ fetchAccountLines endpoint accountId = do
         fetchAccountLineData = fmap decode $ makeRequest endpoint $ AccountLineRequest accountId
 
 textToFixed :: Text -> Maybe Money
-textToFixed t = case ((reads $ unpack t) :: [(Double, String)]) of
-  [(a,"")] -> Just $ realToFrac a
+textToFixed t = case ((reads $ unpack t) :: [(Money, String)]) of
+  [(a,"")] -> Just a
   _ -> Nothing
 
