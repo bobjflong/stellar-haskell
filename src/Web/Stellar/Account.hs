@@ -16,9 +16,9 @@ module Web.Stellar.Account (
 
 import           Control.Applicative
 import           Control.Lens        hiding ((.=))
+import           Control.Monad
 import           Data.Aeson
 import           Data.Text
-import           Lens.Family
 import           Web.Stellar.Request
 
 -- | Provides a lens interface onto a Stellar account
@@ -64,7 +64,7 @@ balance = lens getBalance setBalance
                            [(a,"")] -> MicroStellar a
                            _ -> Unparseable
         setBalance a (MicroStellar x) = a { _balanceData = (pack $ show x) }
-        setBalance a _ = a { _balanceData = "unknown" }
+        setBalance a _ = balanceData .~ "unknown" $ a
 
 instance FromJSON Account where
   parseJSON (Object v) = do
@@ -75,6 +75,7 @@ instance FromJSON Account where
     <*> v .: "PreviousTxnLgrSeq"
     <*> v .: "Sequence"
     <*> v .: "index"
+  parseJSON _ = mzero
 
 data AccountData = AccountData {
   innerAccount :: Account
@@ -83,6 +84,7 @@ data AccountData = AccountData {
 instance FromJSON AccountData where
   parseJSON (Object v) = do
     AccountData <$> ((v .: "result") >>= (.: "account_data"))
+  parseJSON _ = mzero
 
 data AccountInfoRequest = AccountInfoRequest {
   account :: Text

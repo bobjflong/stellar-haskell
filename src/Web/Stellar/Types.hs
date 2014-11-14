@@ -7,13 +7,9 @@ module Web.Stellar.Types (
     moneyLens,
   ) where
 
-import           Control.Applicative
 import           Control.Lens
-import           Control.Monad
-import           Data.Aeson
 import           Data.Fixed
 import           Data.Text
-import           Debug.Trace
 
 type Money = Fixed E12
 

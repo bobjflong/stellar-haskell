@@ -14,11 +14,9 @@ module Web.Stellar.AccountLine (
 
 import           Control.Applicative
 import           Control.Lens        hiding ((.=))
+import           Control.Monad
 import           Data.Aeson
-import           Data.Fixed
 import           Data.Text
-import           Debug.Trace
-import           Lens.Family         hiding ((.~), (^.))
 import           Web.Stellar.Request
 import           Web.Stellar.Types
 
@@ -55,6 +53,7 @@ instance FromJSON AccountLine where
     <*> v .: "currency"
     <*> v .: "limit"
     <*> v .: "limit_peer"
+  parseJSON _ = mzero
 
 limit :: Lens' AccountLine (Maybe Money)
 limit = moneyLens limitData
@@ -72,6 +71,7 @@ data AccountLineData = AccountLineData {
 instance FromJSON AccountLineData where
   parseJSON (Object v) = do
     AccountLineData <$> ((v .: "result") >>= (.: "lines"))
+  parseJSON _ = mzero
 
 data AccountLineRequest = AccountLineRequest {
   account :: Text
@@ -91,9 +91,4 @@ fetchAccountLines endpoint accountId = do
   return $ fmap innerLines accountData
   where fetchAccountLineData :: IO (Maybe AccountLineData)
         fetchAccountLineData = fmap decode $ makeRequest endpoint $ AccountLineRequest accountId
-
-textToFixed :: Text -> Maybe Money
-textToFixed t = case ((reads $ unpack t) :: [(Money, String)]) of
-  [(a,"")] -> Just a
-  _ -> Nothing
 

@@ -17,8 +17,8 @@ genSafeText :: Gen Text
 genSafeText = fmap pack $ listOf $ elements ['a'..'z']
 
 {-
-- Just checking that the lens laws work here
-- I think it's valuable because of the Text -> Money conversion
+ - Properties to check moneyLens
+ - Which converts between Text and Money (Fixed E12)
 -}
 instance Arbitrary AccountLine where
   arbitrary = do acc <- genSafeText

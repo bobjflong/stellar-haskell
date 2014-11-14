@@ -19,26 +19,23 @@ module Web.Stellar.Transaction (
 
 import           Control.Applicative
 import           Control.Lens         hiding ((.=))
+import           Control.Monad
 import           Data.Aeson
-import qualified Data.ByteString.Lazy as LBS
-import           Data.Fixed
 import           Data.Monoid
 import           Data.Text
-import           Debug.Trace
-import           Lens.Family          hiding ((.~), (^.))
 import           Web.Stellar.Internal
 import           Web.Stellar.Request
 import           Web.Stellar.Types
-
+import Debug.Trace
 data Transaction = Transaction {
   _transactionAccount   :: Text,
-  _amountData           :: Text,
   _destination          :: Maybe Text,
   _signingPubKey        :: Text,
   _transactionType      :: Text,
   _transactionSignature :: Text,
   _date                 :: Int,
   _hash                 :: Text,
+  _amountData           :: Text,
   _currency             :: Text
 } deriving (Eq, Show)
 
@@ -49,19 +46,20 @@ amount = moneyLens amountData
 
 instance FromJSON Transaction where
   parseJSON (Object v) = do
-    Transaction <$> ((v .: "tx") >>= (.: "Account"))
-    <*> fmap (extractInner innerText) ((v .: "tx") >>=
-          (\o -> o .:? "Amount" .!= (Just emptyAPIMoney)))
-    <*> ((v .: "tx") >>= (.:? "Destination"))
-    <*> ((v .: "tx") >>= (.: "SigningPubKey"))
-    <*> ((v .: "tx") >>= (.: "TransactionType"))
-    <*> ((v .: "tx") >>= (.: "TxnSignature"))
-    <*> ((v .: "tx") >>= (.: "date"))
-    <*> ((v .: "tx") >>= (.: "hash"))
-    <*> fmap (extractInner innerCurrency) ((v .: "tx") >>=
-          (\o -> o .:? "Amount" .!= (Just defaultAPICurrency)))
-    where extractInner _ Nothing = mempty
-          extractInner f (Just x) = f x
+    Transaction <$> (tx >>= (.: "Account"))
+    <*> (tx >>= (.:? "Destination"))
+    <*> (tx >>= (.: "SigningPubKey"))
+    <*> (tx >>= (.: "TransactionType"))
+    <*> (tx >>= (.: "TxnSignature"))
+    <*> (tx >>= (.: "date"))
+    <*> (tx >>= (.: "hash"))
+    <*> fmap (extract innerMoney) (withDefault "Amount" emptyAPIMoney)
+    <*> fmap (extract innerCurrency) (withDefault "Amount" defaultAPICurrency)
+    where extract _ Nothing = mempty
+          extract f (Just x) = f x
+          withDefault k d = (tx >>= (\o -> o .:? k .!= (Just d)))
+          tx = (v .: "tx")
+  parseJSON _ = mzero
 
 data TransactionList = TransactionList {
   innerTransactions :: [Transaction]
@@ -70,6 +68,7 @@ data TransactionList = TransactionList {
 instance FromJSON TransactionList where
   parseJSON (Object v) = do
     TransactionList <$> ((v .: "result") >>= (.: "transactions"))
+  parseJSON _ = mzero
 
 data TransactionRequest = TransactionRequest {
   account        :: Text,
@@ -88,11 +87,15 @@ instance ToJSON TransactionRequest where
       "marker" .= (marker transactionRequest)]]]
 
 fetchTransactions :: StellarEndpoint -> Text -> Int -> Int -> IO (Maybe [Transaction])
-fetchTransactions endpoint acc min max = fetchTransactionsWithMarker endpoint acc min max ""
+fetchTransactions endpoint acc fetchMin fetchMax = fetchTransactionsWithMarker endpoint acc fetchMin fetchMax ""
 
 fetchTransactionsWithMarker :: StellarEndpoint -> Text -> Int -> Int -> Text -> IO (Maybe [Transaction])
-fetchTransactionsWithMarker endpoint acc min max marker = do
+fetchTransactionsWithMarker endpoint acc fetchMin fetchMax fetchMarker = do
   r <- fetchTransactionData
+  d <- rawRequestData 
+  putStrLn $ show d
   return $ fmap innerTransactions r
-  where fetchTransactionData = fmap decode $ makeRequest endpoint $ TransactionRequest acc min max marker
+  where fetchTransactionData = fmap decode rawRequestData
+        rawRequestData = makeRequest endpoint $ TransactionRequest acc fetchMin fetchMax fetchMarker
+
 
