@@ -92,8 +92,6 @@ fetchTransactions endpoint acc fetchMin fetchMax = fetchTransactionsWithMarker e
 fetchTransactionsWithMarker :: StellarEndpoint -> Text -> Int -> Int -> Text -> IO (Maybe [Transaction])
 fetchTransactionsWithMarker endpoint acc fetchMin fetchMax fetchMarker = do
   r <- fetchTransactionData
-  d <- rawRequestData 
-  putStrLn $ show d
   return $ fmap innerTransactions r
   where fetchTransactionData = fmap decode rawRequestData
         rawRequestData = makeRequest endpoint $ TransactionRequest acc fetchMin fetchMax fetchMarker
