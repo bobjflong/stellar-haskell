@@ -14,19 +14,20 @@ module Web.Stellar.Transaction (
     transactionSignature,
     date,
     hash,
-    currency
+    currency,
+    rawTransaction
   ) where
 
 import           Control.Applicative
 import           Control.Lens         hiding ((.=))
 import           Control.Monad
 import           Data.Aeson
+import           Data.ByteString.Lazy
 import           Data.Monoid
 import           Data.Text
 import           Web.Stellar.Internal
 import           Web.Stellar.Request
 import           Web.Stellar.Types
-
 data Transaction = Transaction {
   _transactionAccount   :: Text,
   _destination          :: Maybe Text,
@@ -36,7 +37,8 @@ data Transaction = Transaction {
   _date                 :: Int,
   _hash                 :: Text,
   _amountData           :: Text,
-  _currency             :: Text
+  _currency             :: Text,
+  _rawTransaction       :: ByteString
 } deriving (Eq, Show)
 
 $(makeLenses ''Transaction)
@@ -55,6 +57,7 @@ instance FromJSON Transaction where
     <*> (tx >>= (.: "hash"))
     <*> fmap (extract innerMoney) (withDefault "Amount" emptyAPIMoney)
     <*> fmap (extract innerCurrency) (withDefault "Amount" defaultAPICurrency)
+    <*> (tx >>= (\t -> return $ encode t))
     where extract _ Nothing = mempty
           extract f (Just x) = f x
           withDefault k d = (tx >>= (\o -> o .:? k .!= (Just d)))

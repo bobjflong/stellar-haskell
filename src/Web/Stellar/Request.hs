@@ -1,6 +1,7 @@
-{-# LANGUAGE DeriveGeneric     #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell   #-}
+{-# LANGUAGE DeriveGeneric       #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TemplateHaskell     #-}
 
 module Web.Stellar.Request (
   PingResponse,
@@ -11,6 +12,7 @@ module Web.Stellar.Request (
 ) where
 
 import           Control.Applicative
+import qualified Control.Exception    as E
 import           Control.Lens         hiding ((.=))
 import           Control.Monad
 import           Data.Aeson
@@ -46,11 +48,11 @@ toPingStatus (PingResponse x) = if x == "success" then PingSuccess else PingFail
 -- >>> pingStellar "https://test.stellar.org:9002"
 -- Just PingSuccess
 pingStellar :: StellarEndpoint -> IO (Maybe PingStatus)
-pingStellar = flip pingStellar' defaultPingRequest
+pingStellar e = (pingStellar' e defaultPingRequest) `E.catch` (\(_ :: E.SomeException) -> return $ Just PingFailure)
   where pingStellar' :: StellarEndpoint -> PingRequest -> IO (Maybe PingStatus)
         pingStellar' endpoint ping = do
-          r <- post (unpack endpoint) (toJSON ping)
-          return $ fmap toPingStatus $ decode (r ^. responseBody)
+          r <- makeRequest endpoint ping
+          return $ fmap toPingStatus $ decode r
 
 makeRequest :: (ToJSON a) => StellarEndpoint -> a -> IO (LBS.ByteString)
 makeRequest x v = do

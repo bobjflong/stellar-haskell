@@ -28,7 +28,7 @@ import           Web.Stellar.Types
 -- | An API representation of money to be sent
 -- Can either describe the currency; issuer; value - or be an amount in microstellars
 data APIAmount = WithCurrency Text Text Money
-                 | Stellars Money
+                 | WithMicroStellars Money
                  deriving (Eq, Show)
 
 instance ToJSON APIAmount where
@@ -37,11 +37,11 @@ instance ToJSON APIAmount where
       "value" .= (showFixed True a),
       "issuer" .= i
     ]
-  toJSON (Stellars s) = String $ pack $ showFixed True s
+  toJSON (WithMicroStellars s) = String $ pack $ showFixed True s
 
 -- | Describes an API request to send a payment
 --
--- >>> defaultPaymentParams & paymentAmount .~ (Stellars 1) & 
+-- >>> defaultPaymentParams & paymentAmount .~ (WithMicroStellars 1) & 
 --                            secret .~ "..." &
 --                            fromAccount .~ "..." &
 --                            toAccount .~ "..."
@@ -70,7 +70,7 @@ instance ToJSON PaymentParams where
 
 -- | Default payment parameters
 defaultPaymentParams :: PaymentParams
-defaultPaymentParams = PaymentParams (Stellars 0) "" "" ""
+defaultPaymentParams = PaymentParams (WithMicroStellars 0) "" "" ""
 
 -- | Represents the returned status code after payment
 data PaymentStatus = PaymentSuccess | PaymentError deriving (Eq, Show)

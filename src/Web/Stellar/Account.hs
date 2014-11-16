@@ -3,11 +3,10 @@
 
 module Web.Stellar.Account (
     fetchAccount,
-    MicroStellar(..),
     Account(..),
     flags,
     ownerCount,
-    previousTransactionID,
+    previousTxnID,
     previousTxnLgrSeq,
     stellarSequence,
     stellarIndex,
@@ -20,11 +19,12 @@ import           Control.Monad
 import           Data.Aeson
 import           Data.Text
 import           Web.Stellar.Request
+import           Web.Stellar.Types
 
 -- | Provides a lens interface onto a Stellar account
 --
 -- >>> account ^. balance
--- MicroStellar 6900888889
+-- Just 135013248.000000000000
 --
 -- >>> account ^. flags
 -- 1048576
@@ -32,7 +32,7 @@ import           Web.Stellar.Request
 -- >>> account ^. ownerCount
 -- 0
 --
--- >>> account ^. previousTransactionID
+-- >>> account ^. previousTxnID
 -- "A584CEF24F24DAA16E99C2858B62A978975C448181FBF34B21B5873AFBA6A8AB
 --
 -- >>> account ^. previousTxnLgrSeq
@@ -44,27 +44,19 @@ import           Web.Stellar.Request
 -- >>> account ^. stellarIndex
 -- "6047FB9C7976F2D0554618F5ABFF423E7136205BAF19E92BE9D295E549442C45"
 data Account = Account {
-  _balanceData           :: Text,
-  _flags                 :: Int,
-  _ownerCount            :: Int,
-  _previousTransactionID :: Text,
-  _previousTxnLgrSeq     :: Int,
-  _stellarSequence       :: Int,
-  _stellarIndex          :: Text
+  _balanceData       :: Text,
+  _flags             :: Int,
+  _ownerCount        :: Int,
+  _previousTxnID     :: Text,
+  _previousTxnLgrSeq :: Int,
+  _stellarSequence   :: Int,
+  _stellarIndex      :: Text
 } deriving (Show)
 
 $(makeLenses ''Account)
 
--- MicroStellars are the smallest divisible Stellar Unit
-data MicroStellar = MicroStellar Int | Unparseable deriving (Show)
-
-balance :: Lens' Account MicroStellar
-balance = lens getBalance setBalance
-  where getBalance acc = case (reads (unpack $ _balanceData acc) :: [(Int, String)]) of
-                           [(a,"")] -> MicroStellar a
-                           _ -> Unparseable
-        setBalance a (MicroStellar x) = a { _balanceData = (pack $ show x) }
-        setBalance a _ = balanceData .~ "unknown" $ a
+balance :: Lens' Account (Maybe Money)
+balance = moneyLens balanceData
 
 instance FromJSON Account where
   parseJSON (Object v) = do
