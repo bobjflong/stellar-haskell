@@ -2,10 +2,10 @@
 
 #### Notes
 These bindings provide access to the [Stellar](https://www.stellar.org/) API. The following examples
-assume a working GHCi session. Additionally, use of unsafe functions like `fromJust` and `head` are
+assume a working GHCi session. Use of unsafe functions like `fromJust` and `head` are
 used for brevity.
 
-You'll also need to set OverloadedStrings in GHCi:
+You'll need to set OverloadedStrings in GHCi:
 
 ```haskell
 > :set -XOverloadedStrings
@@ -16,8 +16,8 @@ You'll also need to set OverloadedStrings in GHCi:
 * [Testing connectivity to stellard](#ping)
 * [Viewing account information](#account_info)
 * [Viewing trust lines for an account](#account_trust_lines)
-* [Viewing account transation](#account_transactions)
-* [Submitting a payment](#account_make_payment)
+* [Viewing account transations](#account_transactions)
+* [Submitting payments](#account_make_payment)
 
 <a name="ping"></a>
 
