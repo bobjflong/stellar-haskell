@@ -155,7 +155,7 @@ Just 1000000000.000000000000
 ```haskell
 > import Web.Stellar.Payment
 
-> let paymentParams = defaultPaymentParams & paymentAmount .~ (Stellars 1) &
+> let paymentParams = defaultPaymentParams & paymentAmount .~ (WithMicroStellars 1) &
                                              secret .~ "..." &
                                              fromAccount .~ "..." &
                                              toAccount .~ "..."
