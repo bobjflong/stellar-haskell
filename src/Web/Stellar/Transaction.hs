@@ -38,7 +38,7 @@ data Transaction = Transaction {
   _date                 :: Int,
   _hash                 :: Text,
   _amountData           :: Text,
-  _currency             :: Text,
+  _currencyData         :: Text,
   _rawTransaction       :: ByteString
 } deriving (Eq, Show)
 
@@ -46,6 +46,11 @@ $(makeLenses ''Transaction)
 
 amount :: Lens' Transaction (Maybe Money)
 amount = moneyLens amountData
+
+currency :: Applicative f => (Text -> f Text) -> Transaction -> f Transaction
+currency f t = case (t ^. currencyData) of
+  "" -> pure t
+  _ -> fmap (\x' -> t { _currencyData = x' }) (f $ t ^. currencyData)
 
 instance FromJSON Transaction where
   parseJSON (Object v) = do
