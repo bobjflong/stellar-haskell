@@ -48,9 +48,10 @@ amount :: Lens' Transaction (Maybe Money)
 amount = moneyLens amountData
 
 currency :: Applicative f => (Text -> f Text) -> Transaction -> f Transaction
-currency f t = case (t ^. currencyData) of
+currency f t = case rawCurrency of
   "" -> pure t
-  _ -> fmap (\x' -> currencyData .~ x' $ t) (f $ t ^. currencyData)
+  _ -> fmap (\x' -> currencyData .~ x' $ t) (f rawCurrency)
+  where rawCurrency = t ^. currencyData
 
 instance FromJSON Transaction where
   parseJSON (Object v) = do
