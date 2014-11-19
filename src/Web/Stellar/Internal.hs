@@ -7,6 +7,7 @@ module Web.Stellar.Internal where
 import           Control.Applicative
 import           Control.Monad
 import           Data.Aeson
+import           Data.Monoid
 import           Data.Text
 
 data APIMoney = ExtractedText {
@@ -14,7 +15,7 @@ data APIMoney = ExtractedText {
 } deriving (Show, Eq)
 
 emptyAPIMoney :: APIMoney
-emptyAPIMoney = ExtractedText ""
+emptyAPIMoney = ExtractedText mempty
 
 instance FromJSON APIMoney where
   parseJSON (Object o) = do
@@ -28,7 +29,7 @@ data APICurrency = ExtractedCurrency {
 } deriving (Show, Eq)
 
 defaultAPICurrency :: APICurrency
-defaultAPICurrency = ExtractedCurrency ""
+defaultAPICurrency = ExtractedCurrency mempty
 
 instance FromJSON APICurrency where
   parseJSON (Object o) = ExtractedCurrency <$> (o .: "currency")
