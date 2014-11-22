@@ -46,7 +46,7 @@ instance ToJSON APIAmount where
 --                            fromAccount .~ "..." &
 --                            toAccount .~ "..."
 data PaymentParams = PaymentParams {
-  _paymentAmount :: APIAmount,
+  _paymentAmount :: !APIAmount,
   _secret :: Text,
   _fromAccount :: Text,
   _toAccount :: Text

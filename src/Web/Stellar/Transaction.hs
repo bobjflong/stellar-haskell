@@ -35,7 +35,7 @@ data Transaction = Transaction {
   _signingPubKey        :: Text,
   _transactionType      :: Text,
   _transactionSignature :: Text,
-  _date                 :: Int,
+  _date                 :: !Int,
   _hash                 :: Text,
   _amountData           :: Text,
   _currencyData         :: Text,

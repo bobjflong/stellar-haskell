@@ -22,7 +22,7 @@ import           GHC.Generics
 import           Network.Wreq
 
 data PingRequest = PingRequest {
-  method :: String
+  method :: Text
 } deriving Generic
 
 instance ToJSON PingRequest

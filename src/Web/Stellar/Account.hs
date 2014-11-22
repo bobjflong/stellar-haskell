@@ -45,11 +45,11 @@ import           Web.Stellar.Types
 -- "6047FB9C7976F2D0554618F5ABFF423E7136205BAF19E92BE9D295E549442C45"
 data Account = Account {
   _balanceData       :: Text,
-  _flags             :: Int,
-  _ownerCount        :: Int,
+  _flags             :: !Int,
+  _ownerCount        :: !Int,
   _previousTxnID     :: Text,
-  _previousTxnLgrSeq :: Int,
-  _stellarSequence   :: Int,
+  _previousTxnLgrSeq :: !Int,
+  _stellarSequence   :: !Int,
   _stellarIndex      :: Text
 } deriving (Show)
 
