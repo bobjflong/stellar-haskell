@@ -5,11 +5,15 @@
 module Web.Stellar.Types (
     Money,
     moneyLens,
+    simpleRequest,
+    method,
+    accountId
   ) where
 
-import           Control.Lens
+import           Control.Lens hiding ((.=))
 import           Data.Fixed
 import           Data.Text
+import Data.Aeson
 
 type Money = Fixed E12
 
@@ -23,3 +27,18 @@ textToFixed :: Text -> Maybe Money
 textToFixed t = case ((reads $ unpack t) :: [(Money, String)]) of
   [(a,"")] -> Just a
   _ -> Nothing
+
+data SimpleRequest = SimpleRequest {
+  _method :: Text,
+  _accountId :: Text
+}
+
+$(makeLenses ''SimpleRequest)
+
+instance ToJSON SimpleRequest where
+  toJSON req = object [
+    "method" .= (req ^. method),
+    "params" .= [object ["account" .= (req ^. accountId)]]]
+
+simpleRequest :: SimpleRequest
+simpleRequest = SimpleRequest "" ""

@@ -15,6 +15,7 @@ You'll need to set OverloadedStrings in GHCi:
 
 * [Testing connectivity to stellard](#ping)
 * [Viewing account information](#account_info)
+* [Viewing available currencies](#account_currencies)
 * [Viewing trust lines for an account](#account_trust_lines)
 * [Viewing account transations](#account_transactions)
 * [Submitting payments](#account_make_payment)
@@ -69,6 +70,24 @@ Just 135013248.000000000000
 
 > account ^. stellarIndex 
 "6047FB9C7976F2D0554618F5ABFF423E7136205BAF19E92BE9D295E549442C45"
+```
+
+<a name="account_currencies"></a>
+
+### Viewing Available Currencies
+
+```haskell
+> import Web.Stellar.AccountCurrency
+
+> r <- fetchCurrencies "https://test.stellar.org:9002" "gM4Fpv2QuHY4knJsQyYGKEHFGw3eMBwc1U">
+
+> let c = fromJust r
+
+> c ^. send
+["BOO","MOZ","USD"]
+
+> c ^. receive
+["MOZ"]
 ```
 
 <a name="account_trust_lines"></a>
