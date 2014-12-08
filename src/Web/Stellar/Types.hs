@@ -11,9 +11,9 @@ module Web.Stellar.Types (
   ) where
 
 import           Control.Lens hiding ((.=))
+import           Data.Aeson
 import           Data.Fixed
 import           Data.Text
-import Data.Aeson
 
 type Money = Fixed E12
 
@@ -29,7 +29,7 @@ textToFixed t = case ((reads $ unpack t) :: [(Money, String)]) of
   _ -> Nothing
 
 data SimpleRequest = SimpleRequest {
-  _method :: Text,
+  _method    :: Text,
   _accountId :: Text
 }
 
