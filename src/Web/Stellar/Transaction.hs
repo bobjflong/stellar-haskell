@@ -11,6 +11,7 @@ module Web.Stellar.Transaction (
     destination,
     signingPubKey,
     transactionType,
+    TransactionType(..),
     transactionSignature,
     date,
     hash,
@@ -25,6 +26,7 @@ import           Data.Aeson
 import           Data.ByteString.Lazy
 import           Data.Monoid
 import           Data.Text
+import qualified Data.Text            as T
 import           Web.Stellar.Internal
 import           Web.Stellar.Request
 import           Web.Stellar.Types
@@ -33,7 +35,7 @@ data Transaction = Transaction {
   _transactionAccount   :: Text,
   _destination          :: Maybe Text,
   _signingPubKey        :: Text,
-  _transactionType      :: Text,
+  _transactionTypeData  :: Text,
   _transactionSignature :: Text,
   _date                 :: !Int,
   _hash                 :: Text,
@@ -42,7 +44,28 @@ data Transaction = Transaction {
   _rawTransaction       :: ByteString
 } deriving (Eq, Show)
 
+data TransactionType =
+  Payment
+  | AccountSet
+  | AccountMerge
+  | OfferCreate
+  | OfferCancel
+  | TrustSet
+  | Inflation
+  | SetRegularKey
+  | UnknownTransactionType
+  deriving (Show, Read)
+
+type TransactionTypeRead = [(TransactionType, String)]
+
 $(makeLenses ''Transaction)
+
+transactionType :: Lens' Transaction TransactionType
+transactionType = lens g s
+  where g v = case ((reads $ T.unpack $ v ^. transactionTypeData) :: TransactionTypeRead) of
+                [(val, "")] -> val
+                _ -> UnknownTransactionType
+        s v t = transactionTypeData .~ (T.pack.show $ t) $ v
 
 amount :: Lens' Transaction (Maybe Money)
 amount = moneyLens amountData
