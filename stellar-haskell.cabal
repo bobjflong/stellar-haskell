@@ -20,6 +20,6 @@ library
   ghc-options:         -O2 -Wall
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base >=4.7 && <4.8, wreq, lens >= 4.4 && < 4.5, bytestring, text, aeson, lens-family-core, lens-family-th, HUnit
+  build-depends:       base >=4.6 && <4.8, wreq, lens == 4.3, bytestring, text, aeson, lens-family-core, lens-family-th, HUnit
   hs-source-dirs:      src
   default-language:    Haskell2010
