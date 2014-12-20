@@ -18,6 +18,7 @@ You'll need to set OverloadedStrings in GHCi:
 * [Viewing available currencies](#account_currencies)
 * [Viewing trust lines for an account](#account_trust_lines)
 * [Viewing account transations](#account_transactions)
+* [Setting trust](#account_set_trust)
 * [Submitting payments](#account_make_payment)
 
 <a name="ping"></a>
@@ -59,16 +60,16 @@ Just 135013248.000000000000
 > account ^. ownerCount
 23
 
-> account ^. previousTxnID 
+> account ^. previousTxnID
 "B5B8DD8668321C987C18F6131269455AA4CD6FD9E8AE6E5C4EA26BA9EDF7F487"
 
-> account ^. previousTxnLgrSeq 
+> account ^. previousTxnLgrSeq
 508838
 
-> account ^. stellarSequence 
+> account ^. stellarSequence
 4265
 
-> account ^. stellarIndex 
+> account ^. stellarIndex
 "6047FB9C7976F2D0554618F5ABFF423E7136205BAF19E92BE9D295E549442C45"
 ```
 
@@ -147,7 +148,7 @@ Just "gHJPw9kW8v4BsUyDnBR8ZHWo8aEkhUMeAq"
 > transaction ^. transactionType
 Payment
 
-> transaction ^. transactionSignature 
+> transaction ^. transactionSignature
 "82F10F2144AA2D10B888F5E7C69D9669CD9E126EFDE3ED8704EF5FB2C70ABE79FCE787B62D8C49001527B08E0655F9A624D5D33A3CA96A8ABAE86353811C5607"
 
 > transaction ^. date
@@ -170,6 +171,29 @@ Nothing
 "{\"TransactionType\":\"Payment\",\"Amount\":\"1000000000\",\"Destination\":\"gHJPw9kW8v4BsUyDnBR8ZHWo8aEkhUMeAq\",\"Flags\":2147483648,\"hash\":\"B5B8DD8668321C987C18F6131269455AA4CD6FD9E8AE6E5C4EA26BA9EDF7F487\",\"inLedger\":508838,\"TxnSignature\":\"82F10F2144AA2D10B888F5E7C69D9669CD9E126EFDE3ED8704EF5FB2C70ABE79FCE787B62D8C49001527B08E0655F9A624D5D33A3CA96A8ABAE86353811C5607\",\"Fee\":\"10\",\"Account\":\"ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb\",\"date\":469441410,\"ledger_index\":508838,\"Sequence\":4264,\"SigningPubKey\":\"BE3900393891A2A2244E28A82C43BA94CA94DD6BFE36D523576A22BFF86055D4\"}"
 ```
 
+<a name="account_set_trust"></a>
+
+### Setting Trust
+
+```haskell
+> import Web.Stellar.TrustLine
+
+-- Currency, Issuer, Amount triple
+> let trustAmount = WithCurrency "USD" "gBAde4mkDijZatAdNhBzCsuC7GP4MzhA3B" 1
+
+>> let trustParams = defaultTrustSetParams & paymentAmount .~ trustAmount &
+                                             secret .~ "..." &
+                                             account .~ "..." &
+                                             flags .~ 131072
+
+> r <- setTrust "https://test.stellar.org:9002" trustParams
+
+> let result = fromJust r
+
+> result ^. status
+SubmissionSuccess
+```
+
 <a name="account_make_payment"></a>
 
 ### Submitting a Payment
@@ -187,7 +211,7 @@ Nothing
 > let result = fromJust r
 
 > result ^. status
-PaymentSuccess
+SubmissionSuccess
 
 > result ^. errorMessage
 Nothing
