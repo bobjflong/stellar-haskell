@@ -13,7 +13,7 @@ data TrustSetParams = TrustSetParams {
   _paymentAmount :: !APIAmount,
   _secret :: !Text,
   _account :: !Text,
-  _flags :: Int
+  _flags :: !Int
 } deriving (Eq, Show)
 
 $(makeLenses ''TrustSetParams)
