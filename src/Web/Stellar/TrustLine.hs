@@ -5,6 +5,7 @@ module Web.Stellar.TrustLine where
 
 import           Control.Lens        hiding ((.=))
 import           Data.Aeson
+import           Data.Monoid
 import           Data.Text
 import           Web.Stellar.Request
 import           Web.Stellar.Types
@@ -33,7 +34,8 @@ instance ToJSON TrustSetParams where
               ]
 
 defaultTrustSetParams :: TrustSetParams
-defaultTrustSetParams = TrustSetParams (WithCurrency "" "" 0) "" "" 0
+defaultTrustSetParams = TrustSetParams defaultMoney mempty mempty 0
+  where defaultMoney = WithCurrency mempty mempty 0
 
 setTrust :: StellarEndpoint -> TrustSetParams -> IO (Maybe SubmissionResponse)
 setTrust e p = makeRequest e p >>= (return.decode)
