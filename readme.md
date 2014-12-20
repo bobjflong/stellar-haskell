@@ -181,7 +181,7 @@ Nothing
 -- Currency, Issuer, Amount triple
 > let trustAmount = WithCurrency "USD" "gBAde4mkDijZatAdNhBzCsuC7GP4MzhA3B" 1
 
->> let trustParams = defaultTrustSetParams & paymentAmount .~ trustAmount &
+> let trustParams = defaultTrustSetParams & paymentAmount .~ trustAmount &
                                              secret .~ "..." &
                                              account .~ "..." &
                                              flags .~ 131072
