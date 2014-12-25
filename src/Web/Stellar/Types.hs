@@ -11,6 +11,7 @@ module Web.Stellar.Types (
     method,
     accountId,
     SubmissionResponse,
+    SubmissionStatus(..),
     errorMessage,
     status,
     APIAmount(..)

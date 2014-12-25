@@ -12,6 +12,7 @@ import           Data.Maybe
 import           Data.Text
 import           Test.HUnit
 import           Web.Stellar.Payment
+import           Web.Stellar.Types
 
 payment1Encodes = TestCase (
                     assertEqual
@@ -20,7 +21,7 @@ payment1Encodes = TestCase (
                     (encode paymentParams1)
                   )
   where res = "{\"params\":[{\"secret\":\"2secret\",\"tx_json\":{\"TransactionType\":\"Payment\",\"Amount\":{\"value\":\"1\",\"currency\":\"USD\",\"issuer\":\"abc\"},\"Destination\":\"luckyduck\",\"Account\":\"moneybags\"}}],\"method\":\"submit\"}"
-        amount1 = WithCurrency "USD" "abc" 1
+        amount1 = WithCurrency (CurrencyCode "USD") (Issuer "abc") 1
         paymentParams1 = defaultPaymentParams & paymentAmount .~ amount1 &
                                                 secret .~ "2secret" &
                                                 fromAccount .~ "moneybags" &
@@ -29,8 +30,8 @@ payment1Encodes = TestCase (
 result1Decodes = TestCase (
                    assertEqual
                    "Successful payment decoding"
-                   PaymentSuccess
-                   ((fromJust ((decode result1) :: Maybe PaymentResponse)) ^. status)
+                   SubmissionSuccess
+                   ((fromJust ((decode result1) :: Maybe SubmissionResponse)) ^. status)
                  )
   where result1 = "{   \"result\" : {      \"engine_result\" : \"tesSUCCESS\",      \"engine_result_code\" : 0,      \"engine_result_message\" : \"The transaction was applied.\",      \"status\" : \"success\",      \"tx_blob\" : \"abc\",      \"tx_json\" : {         \"Account\" : \"abc\",         \"Amount\" : {            \"currency\" : \"USD\",            \"issuer\" : \"abc\",            \"value\" : \"1\"         },         \"Destination\" : \"abc\",         \"Fee\" : \"10\",         \"Flags\" : 2147483648,         \"Sequence\" : 2967,         \"SigningPubKey\" : \"abc\",         \"TransactionType\" : \"Payment\",         \"TxnSignature\" : \"abc\",         \"hash\" : \"abc\"      }   }}\r"
 
