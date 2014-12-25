@@ -179,7 +179,7 @@ Nothing
 > import Web.Stellar.TrustLine
 
 -- Currency, Issuer, Amount triple
-> let trustAmount = WithCurrency "USD" "gBAde4mkDijZatAdNhBzCsuC7GP4MzhA3B" 1
+> let trustAmount = WithCurrency (CurrencyCode "USD") (Issuer "gBAde4mkDijZatAdNhBzCsuC7GP4MzhA3B") 1
 
 > let trustParams = defaultTrustSetParams & paymentAmount .~ trustAmount &
                                              secret .~ "..." &

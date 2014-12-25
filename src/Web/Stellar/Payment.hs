@@ -14,14 +14,14 @@ module Web.Stellar.Payment (
 
 import           Control.Lens        hiding ((.=))
 import           Data.Aeson
-import           Data.Fixed
+import           Data.Monoid
 import           Data.Text
 import           Web.Stellar.Request
 import           Web.Stellar.Types
 
 -- | Describes an API request to send a payment
 --
--- >>> defaultPaymentParams & paymentAmount .~ (WithMicroStellars 1) & 
+-- >>> defaultPaymentParams & paymentAmount .~ (WithMicroStellars 1) &
 --                            secret .~ "..." &
 --                            fromAccount .~ "..." &
 --                            toAccount .~ "..."
@@ -50,12 +50,10 @@ instance ToJSON PaymentParams where
 
 -- | Default payment parameters
 defaultPaymentParams :: PaymentParams
-defaultPaymentParams = PaymentParams (WithMicroStellars 0) "" "" ""
+defaultPaymentParams = PaymentParams (WithMicroStellars 0) mempty mempty mempty
 
 -- | Make a payment by passing an endpoint and some PaymentParams
 --
 -- >>> r <- makePayment "https://test.stellar.org:9002" defaultPaymentParams
 makePayment :: StellarEndpoint -> PaymentParams -> IO (Maybe SubmissionResponse)
-makePayment e p = do
-  paymentData <- makeRequest e p
-  return $ decode paymentData 
+makePayment e p = makeRequest e p >>= (return.decode)

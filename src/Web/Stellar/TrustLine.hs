@@ -11,9 +11,9 @@ import           Web.Stellar.Request
 import           Web.Stellar.Types
 
 data TrustSetParams = TrustSetParams {
-  _paymentAmount :: !APIAmount,
-  _secret :: !Text,
-  _account :: !Text,
+  _paymentAmount :: APIAmount,
+  _secret :: Text,
+  _account :: Text,
   _flags :: !Int
 } deriving (Eq, Show)
 
@@ -35,7 +35,7 @@ instance ToJSON TrustSetParams where
 
 defaultTrustSetParams :: TrustSetParams
 defaultTrustSetParams = TrustSetParams defaultMoney mempty mempty 0
-  where defaultMoney = WithCurrency mempty mempty 0
+  where defaultMoney = WithCurrency (CurrencyCode mempty) (Issuer mempty) 0
 
 setTrust :: StellarEndpoint -> TrustSetParams -> IO (Maybe SubmissionResponse)
 setTrust e p = makeRequest e p >>= (return.decode)

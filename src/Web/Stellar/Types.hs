@@ -5,6 +5,8 @@
 module Web.Stellar.Types (
     Money,
     moneyLens,
+    CurrencyCode(..),
+    Issuer(..),
     simpleRequest,
     method,
     accountId,
@@ -34,9 +36,15 @@ textToFixed t = case ((reads $ unpack t) :: [(Money, String)]) of
   [(a,"")] -> Just a
   _ -> Nothing
 
+
+newtype Issuer = Issuer Text deriving (Eq, Show)
+instance ToJSON Issuer where toJSON (Issuer t) = String t
+
+newtype CurrencyCode = CurrencyCode Text deriving (Eq, Show)
+instance ToJSON CurrencyCode where toJSON (CurrencyCode t) = String t
 -- | An API representation of money to be sent
 -- Can either describe the currency; issuer; value - or be an amount in microstellars
-data APIAmount = WithCurrency Text Text Money
+data APIAmount = WithCurrency CurrencyCode Issuer Money
                  | WithMicroStellars Money
                  deriving (Eq, Show)
 
