@@ -16,7 +16,7 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
-  exposed-modules:     Web.Stellar.Account, Web.Stellar.Request, Web.Stellar.AccountLine, Web.Stellar.Transaction, Web.Stellar.Types, Web.Stellar.Internal, Web.Stellar.Payment, Web.Stellar.AccountCurrency, Web.Stellar.TrustLine
+  exposed-modules:     Web.Stellar.Account, Web.Stellar.Request, Web.Stellar.AccountLine, Web.Stellar.Transaction, Web.Stellar.Types, Web.Stellar.Internal, Web.Stellar.Payment, Web.Stellar.AccountCurrency, Web.Stellar.TrustLine, Web.Stellar.Offer
   ghc-options:         -O2 -Wall
   -- other-modules:       
   -- other-extensions:    
