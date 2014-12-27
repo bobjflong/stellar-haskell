@@ -8,6 +8,7 @@ module Web.Stellar.Payment (
     makePayment,
     paymentAmount,
     secret,
+    sequence,
     fromAccount,
     toAccount
   ) where
@@ -16,6 +17,7 @@ import           Control.Lens        hiding ((.=))
 import           Data.Aeson
 import           Data.Monoid
 import           Data.Text
+import           Prelude             hiding (sequence)
 import           Web.Stellar.Request
 import           Web.Stellar.Types
 
@@ -27,9 +29,10 @@ import           Web.Stellar.Types
 --                            toAccount .~ "..."
 data PaymentParams = PaymentParams {
   _paymentAmount :: !APIAmount,
-  _secret :: Text,
-  _fromAccount :: Text,
-  _toAccount :: Text
+  _secret        :: Text,
+  _fromAccount   :: Text,
+  _toAccount     :: Text,
+  _sequence      :: !Int
 } deriving (Eq, Show)
 
 $(makeLenses ''PaymentParams)
@@ -43,14 +46,15 @@ instance ToJSON PaymentParams where
                     "TransactionType" .= ("Payment" :: Text),
                     "Account" .= (p ^. fromAccount),
                     "Destination" .= (p ^. toAccount),
-                    "Amount" .= (p ^. paymentAmount)
+                    "Amount" .= (p ^. paymentAmount),
+                    "Sequence" .= (p ^. sequence)
                   ]
                ]]
              ]
 
 -- | Default payment parameters
 defaultPaymentParams :: PaymentParams
-defaultPaymentParams = PaymentParams (WithMicroStellars 0) mempty mempty mempty
+defaultPaymentParams = PaymentParams (WithMicroStellars 0) mempty mempty mempty 0
 
 -- | Make a payment by passing an endpoint and some PaymentParams
 --

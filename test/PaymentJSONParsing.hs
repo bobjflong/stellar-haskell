@@ -5,11 +5,12 @@ module PaymentJSONTests where
 
 import           Control.Applicative
 import           Control.Lens        hiding ((.=))
-import           Control.Monad
+import           Control.Monad       hiding (sequence)
 import           Data.Aeson
 import           Data.Fixed
 import           Data.Maybe
 import           Data.Text
+import           Prelude             hiding (sequence)
 import           Test.HUnit
 import           Web.Stellar.Payment
 import           Web.Stellar.Types
@@ -20,12 +21,13 @@ payment1Encodes = TestCase (
                     res
                     (encode paymentParams1)
                   )
-  where res = "{\"params\":[{\"secret\":\"2secret\",\"tx_json\":{\"TransactionType\":\"Payment\",\"Amount\":{\"value\":\"1\",\"currency\":\"USD\",\"issuer\":\"abc\"},\"Destination\":\"luckyduck\",\"Account\":\"moneybags\"}}],\"method\":\"submit\"}"
+  where res = "{\"params\":[{\"secret\":\"2secret\",\"tx_json\":{\"TransactionType\":\"Payment\",\"Amount\":{\"value\":\"1\",\"currency\":\"USD\",\"issuer\":\"abc\"},\"Destination\":\"luckyduck\",\"Account\":\"moneybags\",\"Sequence\":4}}],\"method\":\"submit\"}"
         amount1 = WithCurrency (CurrencyCode "USD") (Issuer "abc") 1
         paymentParams1 = defaultPaymentParams & paymentAmount .~ amount1 &
                                                 secret .~ "2secret" &
                                                 fromAccount .~ "moneybags" &
-                                                toAccount .~ "luckyduck"
+                                                toAccount .~ "luckyduck" &
+                                                sequence .~ 4
 
 result1Decodes = TestCase (
                    assertEqual
