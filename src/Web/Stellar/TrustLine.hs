@@ -26,8 +26,8 @@ instance ToJSON TrustSetParams where
                 "method" .= ("submit" :: Text),
                 "params" .= [object [
                   "secret" .= (p ^. secret),
-                  "flags" .= (p ^. flags),
                   "tx_json" .= object [
+                    "Flags" .= (p ^. flags),
                     "TransactionType" .= ("TrustSet" :: Text),
                     "Account" .= (p ^. account),
                     "LimitAmount" .= (p ^. paymentAmount),

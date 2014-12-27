@@ -184,7 +184,8 @@ Nothing
 > let trustParams = defaultTrustSetParams & paymentAmount .~ trustAmount &
                                              secret .~ "..." &
                                              account .~ "..." &
-                                             flags .~ 131072
+                                             flags .~ 131072 &
+                                             sequence .~ 123
 
 > r <- setTrust "https://test.stellar.org:9002" trustParams
 
@@ -192,6 +193,34 @@ Nothing
 
 > result ^. status
 SubmissionSuccess
+```
+
+<a name="account_make_offer"></a>
+
+### Submitting an Offer
+
+```haskell
+> import Web.Stellar.Offer
+
+> let gets = WithCurrency (CurrencyCode "USD") (Issuer "...") 1500
+
+> let pays = WithCurrency (CurrencyCode "BTC") (Issuer "...") 2.5
+
+> let offerParams = defaultOfferParams & account .~ "..." &
+                                         takerGets .~ gets &
+                                         takerPays .~ pays &
+                                         sequence .~ 123 &
+                                         secret .~ "..."
+
+> r <- offerCreate "https://test.stellar.org:9002" offerParams
+
+> let result = fromJust r
+
+> result ^. status
+SubmissionSuccess
+
+> result ^. errorMessage
+Nothing
 ```
 
 <a name="account_make_payment"></a>
@@ -204,7 +233,8 @@ SubmissionSuccess
 > let paymentParams = defaultPaymentParams & paymentAmount .~ (WithMicroStellars 1) &
                                              secret .~ "..." &
                                              fromAccount .~ "..." &
-                                             toAccount .~ "..."
+                                             toAccount .~ "..." &
+                                             sequence .~ 123
 
 > r <- makePayment "https://test.stellar.org:9002" paymentParams
 
