@@ -19,6 +19,7 @@ You'll need to set OverloadedStrings in GHCi:
 * [Viewing trust lines for an account](#account_trust_lines)
 * [Viewing account transations](#account_transactions)
 * [Setting trust](#account_set_trust)
+* [Submitting offers](#account_make_offer)
 * [Submitting payments](#account_make_payment)
 
 <a name="ping"></a>
