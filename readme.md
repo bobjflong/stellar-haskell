@@ -1,5 +1,7 @@
 ### Stellar api bindings for Haskell
 
+__In development, not safe for use really__
+
 #### Notes
 These bindings provide access to the [Stellar](https://www.stellar.org/) API. The following examples
 assume a working GHCi session. Use of unsafe functions like `fromJust` and `head` are
