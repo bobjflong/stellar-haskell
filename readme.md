@@ -23,6 +23,7 @@ You'll need to set OverloadedStrings in GHCi:
 * [Setting trust](#account_set_trust)
 * [Submitting offers](#account_make_offer)
 * [Submitting payments](#account_make_payment)
+* [Signing requests](#sign_request)
 
 <a name="ping"></a>
 
@@ -248,3 +249,25 @@ SubmissionSuccess
 
 > result ^. errorMessage
 Nothing
+```
+
+<a name="sign_request"></a>
+
+### Signing Requests
+
+It's not great to pass your secret to untrusted servers. The state of local signing with `ripple-lib` and `stellar-lib` is not amazing though - unfortunately the executable `rsign.js` is buggy, and changes frequently between versions. I have been using a local `stellard` instance to sign my requests, and this seems to work OK. Currently I have support for this for payments; and I'm working on adding support for other submission types.
+
+```haskell
+> import Web.Stellar.Signing
+
+> r <- signRequest "http://localhost:5005" (toSignRequest paymentParams)
+
+> let res = fromJust r
+> res ^. blob
+"12000022800000002400...."
+
+> finalResponse <- makeSignedRequest "https://test.stellar.org:9002" res
+
+> (fromJust finalResponse) ^. status
+SubmissionSuccess
+```
