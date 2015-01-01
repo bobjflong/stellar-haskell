@@ -3,7 +3,6 @@
 
 module Web.Stellar.Payment (
     APIAmount(..),
-    xaymentParams, 
     PaymentParams(..),
     defaultPaymentParams,
     makePayment,
@@ -72,9 +71,3 @@ toSignRequest p = S.defaultSignRequest & S.signSecret .~ (p ^. secret) &
 -- >>> r <- makePayment "https://test.stellar.org:9002" defaultPaymentParams
 makePayment :: StellarEndpoint -> PaymentParams -> IO (Maybe SubmissionResponse)
 makePayment e p = makeRequest e p >>= (return.decode)
-
-xaymentParams = defaultPaymentParams & paymentAmount .~ (WithMicroStellars 1) &
-                                       secret .~ "s3q5ZGX2ScQK2rJ4JATp7rND6X5npG3De8jMbB7tuvm2HAVHcCN" &
-                                       fromAccount .~ "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb" &
-                                       toAccount .~ "gHJPw9kW8v4BsUyDnBR8ZHWo8aEkhUMeAq" &
-                                       Web.Stellar.Payment.sequence .~ 123
