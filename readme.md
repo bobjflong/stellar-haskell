@@ -255,7 +255,7 @@ Nothing
 
 ### Signing Requests
 
-It's not great to pass your secret to untrusted servers. The state of local signing with `ripple-lib` and `stellar-lib` is not amazing though - unfortunately the executable `rsign.js` is buggy, and changes frequently between versions. I have been using a local `stellard` instance to sign my requests, and this seems to work OK. Currently I have support for this for payments; and I'm working on adding support for other submission types.
+It's not great to pass your secret to untrusted servers. The state of local signing with `ripple-lib` and `stellar-lib` is not amazing though - unfortunately the executable `rsign.js` is buggy, and changes frequently between versions. I have been using a local `stellard` instance to sign my requests, and this seems to work OK. I run it in standalone (`-a`) mode which is much lighter on resources than running a full `stellard` instance. Currently I have support signing against a separate instance for payments; and I'm working on adding support for other submission types.
 
 ```haskell
 > import Web.Stellar.Signing
