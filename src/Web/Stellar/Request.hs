@@ -5,7 +5,7 @@
 
 module Web.Stellar.Request (
   PingResponse,
-  StellarEndpoint,
+  StellarEndpoint(..),
   pingStellar,
   PingStatus(..),
   makeRequest
@@ -30,7 +30,7 @@ instance ToJSON PingRequest
 defaultPingRequest :: PingRequest
 defaultPingRequest = PingRequest { method = "ping" }
 
-type StellarEndpoint = Text
+newtype StellarEndpoint = Endpoint Text
 
 data PingResponse = PingResponse Text deriving (Show)
 instance FromJSON PingResponse where
@@ -55,7 +55,7 @@ pingStellar e = (pingStellar' e defaultPingRequest) `E.catch` (\(_ :: E.SomeExce
           return $ fmap toPingStatus $ decode r
 
 makeRequest :: (ToJSON a) => StellarEndpoint -> a -> IO (LBS.ByteString)
-makeRequest x v = do
+makeRequest (Endpoint x) v = do
   r <- post (unpack x) (toJSON v)
   return $ r ^. responseBody
 

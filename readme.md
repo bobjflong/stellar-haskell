@@ -32,10 +32,10 @@ You'll need to set OverloadedStrings in GHCi:
 ```haskell
 > import Web.Stellar.Request
 
-> pingStellar "https://test.stellar.org:9002"
+> pingStellar (Endpoint "https://test.stellar.org:9002")
 Just PingSuccess
 
-> pingStellar "https://google.com"
+> pingStellar (Endpoint "https://google.com")
 Just PingFailure
 ```
 
@@ -51,7 +51,7 @@ documentation](https://www.stellar.org/api/#api-account_info).
 > import Data.Maybe
 > import Control.Lens
 
-> r <- fetchAccount "https://test.stellar.org:9002" "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb"
+> r <- fetchAccount (Endpoint "https://test.stellar.org:9002") "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb"
 
 > let account = fromJust r
 
@@ -84,7 +84,7 @@ Just 135013248.000000000000
 ```haskell
 > import Web.Stellar.AccountCurrency
 
-> r <- fetchCurrencies "https://test.stellar.org:9002" "gM4Fpv2QuHY4knJsQyYGKEHFGw3eMBwc1U">
+> r <- fetchCurrencies (Endpoint "https://test.stellar.org:9002") "gM4Fpv2QuHY4knJsQyYGKEHFGw3eMBwc1U">
 
 > let c = fromJust r
 
@@ -104,7 +104,7 @@ Just 135013248.000000000000
 ```haskell
 > import Web.Stellar.AccountLine
 
-> r <- fetchAccountLines "https://test.stellar.org:9002" "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb"
+> r <- fetchAccountLines (Endpoint "https://test.stellar.org:9002") "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb"
 
 > let line = (Prelude.head.fromJust) r
 
@@ -136,7 +136,7 @@ from, -1 is the latest to fetch from (-1 signifying the current ledger). See the
 ```haskell
 > import Web.Stellar.Transaction
 
-> r <- fetchTransactions "https://test.stellar.org:9002" "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb" 0 (-1)
+> r <- fetchTransactions (Endpoint "https://test.stellar.org:9002") "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb" 0 (-1)
 
 > let transaction = (Prelude.head.fromJust) r
 
@@ -191,7 +191,7 @@ Nothing
                                              flags .~ 131072 &
                                              sequence .~ 123
 
-> r <- setTrust "https://test.stellar.org:9002" trustParams
+> r <- setTrust (Endpoint "https://test.stellar.org:9002") trustParams
 
 > let result = fromJust r
 
@@ -216,7 +216,7 @@ SubmissionSuccess
                                          sequence .~ 123 &
                                          secret .~ "..."
 
-> r <- offerCreate "https://test.stellar.org:9002" offerParams
+> r <- offerCreate (Endpoint "https://test.stellar.org:9002") offerParams
 
 > let result = fromJust r
 
@@ -240,7 +240,7 @@ Nothing
                                              toAccount .~ "..." &
                                              sequence .~ 123
 
-> r <- makePayment "https://test.stellar.org:9002" paymentParams
+> r <- makePayment (Endpoint "https://test.stellar.org:9002") paymentParams
 
 > let result = fromJust r
 
@@ -260,13 +260,13 @@ It's not great to pass your secret to untrusted servers. The state of local sign
 ```haskell
 > import Web.Stellar.Signing
 
-> r <- signRequest "http://localhost:5005" (toSignRequest paymentParams)
+> r <- signRequest (Endpoint "http://localhost:5005") (toSignRequest paymentParams)
 
 > let res = fromJust r
 > res ^. blob
 "12000022800000002400...."
 
-> finalResponse <- makeSignedRequest "https://test.stellar.org:9002" res
+> finalResponse <- makeSignedRequest (Endpoint "https://test.stellar.org:9002") res
 
 > (fromJust finalResponse) ^. status
 SubmissionSuccess
