@@ -1,3 +1,7 @@
+{-
+ - todo bobjflong: move this to Types.hs
+ -}
+
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes        #-}
 {-# LANGUAGE TemplateHaskell   #-}
