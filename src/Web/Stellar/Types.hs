@@ -19,9 +19,10 @@ module Web.Stellar.Types (
   ) where
 
 import           Control.Applicative
-import           Control.Lens hiding ((.=))
+import           Control.Lens        hiding ((.=))
 import           Control.Monad
 import           Data.Aeson
+import           Data.Aeson.Types
 import           Data.Fixed
 import           Data.Text
 
@@ -86,22 +87,27 @@ data SubmissionStatus = SubmissionSuccess | SubmissionError deriving (Eq, Show)
 -- >>> result ^. errorMessage
 -- Nothing
 data SubmissionResponse = SubmissionResponse {
-  _statusData :: Text,
+  _status       :: !SubmissionStatus,
   _errorMessage :: Maybe Text
 } deriving (Eq, Show)
 
 $(makeLenses ''SubmissionResponse)
 
-status :: Lens' SubmissionResponse SubmissionStatus
-status = lens getStatus setStatus
-  where getStatus p = if ((p ^. statusData) == ok) then SubmissionSuccess else SubmissionError
-        setStatus p SubmissionSuccess = statusData .~ ok $ p
-        setStatus p SubmissionError = statusData .~ notOk $ p
-        ok = "success"
-        notOk = "error"
-
 instance FromJSON SubmissionResponse where
   parseJSON (Object v) = do
-    SubmissionResponse <$> (r >>= (.: "status")) <*> (r >>= (.:? "error_message"))
+    code <- engineCode
+    status <- stellarStatus
+    case code of
+      -- Select between the engine_message or the error_message heuristically using the
+      -- engine_status_code
+      0 ->
+        case status of
+          "success" -> SubmissionResponse SubmissionSuccess <$> errorMessage
+          _ -> SubmissionResponse SubmissionError <$> errorMessage
+      _ -> SubmissionResponse SubmissionError <$> engineMessage
     where r = (v .: "result")
+          stellarStatus = r >>= (.: "status") :: Parser String
+          errorMessage = r >>= (.:? "error_message")
+          engineCode = r >>= (\o -> o .:? "engine_result_code" .!= 0) :: Parser Int
+          engineMessage = r >>= (.:? "engine_result_message")
   parseJSON _ = mzero

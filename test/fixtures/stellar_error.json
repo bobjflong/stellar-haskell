@@ -1,0 +1,26 @@
+{
+  "result": {
+    "error": "badSecret",
+    "error_code": 37,
+    "error_message": "Secret does not match account.",
+    "request": {
+      "command": "submit",
+      "secret": "abc",
+      "tx_json": {
+        "Account": "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb",
+        "TakerGets": {
+          "currency": "USD",
+          "issuer": "ghj4kXtHfQcCaLQwpLJ11q2hq6248R7k9C",
+          "value": "1500"
+        },
+        "TakerPays": {
+          "currency": "BTC",
+          "issuer": "ghj4kXtHfQcCaLQwpLJ11q2hq6248R7k9C",
+          "value": "2.5"
+        },
+        "TransactionType": "OfferCreate"
+      }
+    },
+    "status": "error"
+  }
+}
