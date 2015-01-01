@@ -51,7 +51,7 @@ documentation](https://www.stellar.org/api/#api-account_info).
 > import Data.Maybe
 > import Control.Lens
 
-> r <- fetchAccount (Endpoint "https://test.stellar.org:9002") "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb"
+> r <- fetchAccount (Endpoint "https://test.stellar.org:9002") (AccountID "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb")
 
 > let account = fromJust r
 
@@ -84,7 +84,7 @@ Just 135013248.000000000000
 ```haskell
 > import Web.Stellar.AccountCurrency
 
-> r <- fetchCurrencies (Endpoint "https://test.stellar.org:9002") "gM4Fpv2QuHY4knJsQyYGKEHFGw3eMBwc1U">
+> r <- fetchCurrencies (Endpoint "https://test.stellar.org:9002") (AccountID "gM4Fpv2QuHY4knJsQyYGKEHFGw3eMBwc1U")
 
 > let c = fromJust r
 
@@ -104,7 +104,7 @@ Just 135013248.000000000000
 ```haskell
 > import Web.Stellar.AccountLine
 
-> r <- fetchAccountLines (Endpoint "https://test.stellar.org:9002") "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb"
+> r <- fetchAccountLines (Endpoint "https://test.stellar.org:9002") (AccountID "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb")
 
 > let line = (Prelude.head.fromJust) r
 
@@ -128,7 +128,7 @@ Just 0.000000000000
 
 ### Viewing Transactions for an Account
 
-Here, 0 and -1 are used to set the boundaries of transaction history. 0 is the earliest ledger to fetch
+Here, earliestLedger and currenctLedger are used to set the boundaries of transaction history. 0 is the earliest ledger to fetch
 from, -1 is the latest to fetch from (-1 signifying the current ledger). See the
 [docs](https://www.stellar.org/api/#api-account_tx) for more.
 
@@ -136,7 +136,7 @@ from, -1 is the latest to fetch from (-1 signifying the current ledger). See the
 ```haskell
 > import Web.Stellar.Transaction
 
-> r <- fetchTransactions (Endpoint "https://test.stellar.org:9002") "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb" 0 (-1)
+> r <- fetchTransactions (Endpoint "https://test.stellar.org:9002") (AccountID "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb") earliestLedger currentLedger
 
 > let transaction = (Prelude.head.fromJust) r
 

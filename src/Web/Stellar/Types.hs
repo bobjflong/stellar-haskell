@@ -3,6 +3,7 @@
 {-# LANGUAGE TemplateHaskell   #-}
 
 module Web.Stellar.Types (
+    AccountID(..),
     Money,
     moneyLens,
     CurrencyCode(..),
@@ -23,6 +24,8 @@ import           Control.Monad
 import           Data.Aeson
 import           Data.Fixed
 import           Data.Text
+
+newtype AccountID = AccountID Text
 
 type Money = Fixed E12
 

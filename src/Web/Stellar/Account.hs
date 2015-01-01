@@ -90,8 +90,8 @@ instance ToJSON AccountInfoRequest where
 -- | Fetch account information for an Account ID
 --
 -- >>> r <- fetchAccount "https://test.stellar.org:9002" "abcdef..."
-fetchAccount :: StellarEndpoint -> Text -> IO (Maybe Account)
-fetchAccount endpoint accountId = do
+fetchAccount :: StellarEndpoint -> AccountID -> IO (Maybe Account)
+fetchAccount endpoint (AccountID accountId) = do
   accountData <- fetchTestAccountData
   return $ fmap innerAccount accountData
   where fetchTestAccountData :: IO (Maybe AccountData)

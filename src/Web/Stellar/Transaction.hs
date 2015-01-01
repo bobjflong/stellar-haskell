@@ -6,6 +6,8 @@ module Web.Stellar.Transaction (
     fetchTransactions,
     fetchTransactionsWithMarker,
     Transaction(..),
+    earliestLedger,
+    currentLedger,
     transactionAccount,
     amount,
     destination,
@@ -119,11 +121,19 @@ instance ToJSON TransactionRequest where
       "ledger_index_max" .= (ledgerIndexMax transactionRequest),
       "marker" .= (marker transactionRequest)]]]
 
-fetchTransactions :: StellarEndpoint -> Text -> Int -> Int -> IO (Maybe [Transaction])
+type LedgerLimit = Int
+
+earliestLedger :: LedgerLimit
+earliestLedger = 0
+
+currentLedger :: LedgerLimit
+currentLedger = (-1)
+
+fetchTransactions :: StellarEndpoint -> AccountID -> LedgerLimit -> LedgerLimit -> IO (Maybe [Transaction])
 fetchTransactions endpoint acc fetchMin fetchMax = fetchTransactionsWithMarker endpoint acc fetchMin fetchMax ""
 
-fetchTransactionsWithMarker :: StellarEndpoint -> Text -> Int -> Int -> Text -> IO (Maybe [Transaction])
-fetchTransactionsWithMarker endpoint acc fetchMin fetchMax fetchMarker = do
+fetchTransactionsWithMarker :: StellarEndpoint -> AccountID -> LedgerLimit -> LedgerLimit -> Text -> IO (Maybe [Transaction])
+fetchTransactionsWithMarker endpoint (AccountID acc) fetchMin fetchMax fetchMarker = do
   r <- fetchTransactionData
   return $ fmap innerTransactions r
   where fetchTransactionData = fmap decode rawRequestData

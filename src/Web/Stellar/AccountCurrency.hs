@@ -31,8 +31,8 @@ instance FromJSON AccountCurrencyData where
     AccountCurrencyData <$> (v .: "result")
   parseJSON _ = mzero
 
-fetchCurrencies :: StellarEndpoint -> Text -> IO (Maybe AccountCurrency)
-fetchCurrencies endpoint aid = do
+fetchCurrencies :: StellarEndpoint -> AccountID -> IO (Maybe AccountCurrency)
+fetchCurrencies endpoint (AccountID aid) = do
   currencyData <- fetchCurrencyData
   return $ fmap innerCurrency currencyData
   where fetchCurrencyData :: IO (Maybe AccountCurrencyData)

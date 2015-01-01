@@ -75,8 +75,8 @@ instance FromJSON AccountLineData where
 -- | Fetch trust lines for an Account ID
 --
 -- >>> r <- fetchAccountLines "https://test.stellar.org:9002" "abcdef..."
-fetchAccountLines :: StellarEndpoint -> Text -> IO (Maybe [AccountLine])
-fetchAccountLines endpoint aid = do
+fetchAccountLines :: StellarEndpoint -> AccountID -> IO (Maybe [AccountLine])
+fetchAccountLines endpoint (AccountID aid) = do
   accountData <- fetchAccountLineData
   return $ fmap innerLines accountData
   where fetchAccountLineData :: IO (Maybe AccountLineData)
