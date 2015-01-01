@@ -18,10 +18,8 @@ emptyAPIMoney :: APIMoney
 emptyAPIMoney = ExtractedText mempty
 
 instance FromJSON APIMoney where
-  parseJSON (Object o) = do
-    ExtractedText <$> (o .: "value")
-  parseJSON (String s) = do
-    return $ ExtractedText s
+  parseJSON (Object o) = ExtractedText <$> (o .: "value")
+  parseJSON (String s) = return $ ExtractedText s
   parseJSON _ = mzero
 
 data APICurrency = ExtractedCurrency {
