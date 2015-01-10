@@ -49,8 +49,5 @@ instance S.SignableRequest OfferCreateParams where
   txJSONToSign = txJSON
   secretToUse = flip (^.) secret
 
-add :: Int -> Int -> Int
-add x y = x + y
-
 offerCreate :: StellarEndpoint -> OfferCreateParams -> IO (Maybe SubmissionResponse)
 offerCreate e p = makeRequest e p >>= (return.decode)
