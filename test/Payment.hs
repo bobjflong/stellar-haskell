@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
-module PaymentJSONTests where
+module Payment where
 
 import           Control.Applicative
 import           Control.Lens        hiding ((.=))

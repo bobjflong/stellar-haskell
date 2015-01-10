@@ -10,8 +10,7 @@ module Web.Stellar.Payment (
     secret,
     sequence,
     fromAccount,
-    toAccount,
-    toSignRequest
+    toAccount
   ) where
 
 import           Control.Lens        hiding ((.=))
@@ -61,10 +60,9 @@ txJSON p = object [
 defaultPaymentParams :: PaymentParams
 defaultPaymentParams = PaymentParams (WithMicroStellars 0) mempty mempty mempty 0
 
--- | Create a request to sign payment parameters
-toSignRequest :: PaymentParams -> S.SignRequest
-toSignRequest p = S.defaultSignRequest & S.signSecret .~ (p ^. secret) &
-                                         S.txJSON .~ (txJSON p)
+instance S.SignableRequest PaymentParams where
+  txJSONToSign = txJSON
+  secretToUse = flip (^.) secret
 
 -- | Make a payment by passing an endpoint and some PaymentParams
 --

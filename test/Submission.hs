@@ -1,8 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module SubmissionErrors (
-
-  ) where
+module Submission where
 
 import           Control.Applicative
 import           Control.Lens               hiding ((.=))

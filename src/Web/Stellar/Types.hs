@@ -5,6 +5,7 @@
 module Web.Stellar.Types (
     AccountID(..),
     Money,
+    StellarEndpoint(..),
     moneyLens,
     CurrencyCode(..),
     Issuer(..),
@@ -27,6 +28,8 @@ import           Data.Fixed
 import           Data.Text
 
 newtype AccountID = AccountID Text
+
+newtype StellarEndpoint = Endpoint Text
 
 type Money = Fixed E12
 

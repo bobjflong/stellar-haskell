@@ -8,7 +8,9 @@ module Web.Stellar.Signing (
     txJSON,
     signRequest,
     blob,
-    makeSignedRequest
+    makeSignedRequest,
+    SignableRequest(..),
+    toSignRequest
   ) where
 
 import           Control.Applicative
@@ -59,6 +61,14 @@ instance ToJSON SignResponse where
 
 signRequest :: StellarEndpoint -> SignRequest -> IO (Maybe SignResponse)
 signRequest e p = makeRequest e p >>= (return.decode)
+
+class SignableRequest a where
+  txJSONToSign :: a -> Value
+  secretToUse :: a -> Text
+
+toSignRequest :: (SignableRequest a) => a -> SignRequest
+toSignRequest p = defaultSignRequest & signSecret .~ (secretToUse p) &
+                                       txJSON .~ (txJSONToSign p)
 
 -- todo: duplication ^
 makeSignedRequest :: StellarEndpoint -> SignResponse -> IO (Maybe SubmissionResponse)
