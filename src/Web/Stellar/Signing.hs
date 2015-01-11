@@ -70,6 +70,5 @@ toSignRequest :: (SignableRequest a) => a -> SignRequest
 toSignRequest p = defaultSignRequest & signSecret .~ (secretToUse p) &
                                        txJSON .~ (txJSONToSign p)
 
--- todo: duplication ^
 makeSignedRequest :: StellarEndpoint -> SignResponse -> IO (Maybe SubmissionResponse)
 makeSignedRequest e p = makeRequest e p >>= (return.decode)
