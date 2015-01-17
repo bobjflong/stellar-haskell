@@ -9,6 +9,7 @@ import           Data.Monoid
 import           Data.Text
 import           Prelude             hiding (sequence)
 import           Web.Stellar.Request
+import qualified Web.Stellar.Signing as S
 import           Web.Stellar.Types
 
 data TrustSetParams = TrustSetParams {
@@ -26,15 +27,22 @@ instance ToJSON TrustSetParams where
                 "method" .= ("submit" :: Text),
                 "params" .= [object [
                   "secret" .= (p ^. secret),
-                  "tx_json" .= object [
-                    "Flags" .= (p ^. flags),
-                    "TransactionType" .= ("TrustSet" :: Text),
-                    "Account" .= (p ^. account),
-                    "LimitAmount" .= (p ^. paymentAmount),
-                    "Sequence" .= (p ^. sequence)
-                  ]
+                  "tx_json" .= (txJSON p)
                 ]]
               ]
+
+txJSON :: TrustSetParams -> Value
+txJSON p = object [
+             "Flags" .= (p ^. flags),
+             "TransactionType" .= ("TrustSet" :: Text),
+             "Account" .= (p ^. account),
+             "LimitAmount" .= (p ^. paymentAmount),
+             "Sequence" .= (p ^. sequence)
+           ]
+
+instance S.SignableRequest TrustSetParams where
+  txJSONToSign = txJSON
+  secretToUse = flip (^.) secret
 
 defaultTrustSetParams :: TrustSetParams
 defaultTrustSetParams = TrustSetParams defaultMoney mempty mempty 0 0
