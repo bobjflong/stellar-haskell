@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RankNTypes        #-}
 
 module MoneyConversion where
 
@@ -31,4 +30,5 @@ main = hspec $ do
     it "gets back what it puts in" $
       property $ \m a -> Just m == (balance .~ (Just m) $ a) ^. balance
     it "sets twice safely" $
-      property $ \m a -> (balance .~ (Just m) $ a) == (balance .~ (Just m) $ (balance .~ (Just m) $ a))
+      property $ \m a ->
+                  (balance .~ (Just m) $ a) == (balance .~ (Just m) $ (balance .~ (Just m) $ a))
