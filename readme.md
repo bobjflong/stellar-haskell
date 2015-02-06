@@ -33,10 +33,10 @@ You'll need to set OverloadedStrings in GHCi:
 > import Web.Stellar.Request
 
 > pingStellar (Endpoint "https://test.stellar.org:9002")
-Just PingSuccess
+Right PingSuccess
 
 > pingStellar (Endpoint "https://google.com")
-Just PingFailure
+Left PingFailure
 ```
 
 <a name="account_info"></a>

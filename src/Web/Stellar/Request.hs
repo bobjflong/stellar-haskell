@@ -6,7 +6,9 @@
 module Web.Stellar.Request (
   PingResponse,
   pingStellar,
-  PingStatus(..),
+  PingStatus,
+  PingSuccess(..),
+  PingFailure(..),
   makeRequest
 ) where
 
@@ -20,6 +22,7 @@ import           Data.Text
 import           GHC.Generics
 import           Network.Wreq
 import qualified Web.Stellar.Types    as T
+import Data.Maybe
 
 data PingRequest = PingRequest {
   method :: Text
@@ -35,22 +38,32 @@ instance FromJSON PingResponse where
   parseJSON (Object v) = PingResponse <$> ((v .: "result") >>= (.: "status"))
   parseJSON _ = mzero
 
-data PingStatus = PingSuccess | PingFailure deriving (Show)
+data PingFailure = PingFailure deriving (Eq, Show)
+data PingSuccess = PingSuccess deriving (Eq, Show)
+
+type PingStatus = Either PingFailure PingSuccess
+
+pingFailure :: PingStatus
+pingFailure = Left PingFailure
+
+pingSuccess :: PingStatus
+pingSuccess = Right PingSuccess
 
 toPingStatus :: PingResponse -> PingStatus
-toPingStatus (PingResponse x) = if x == "success" then PingSuccess else PingFailure
+toPingStatus (PingResponse x) = if x == "success" then pingSuccess else pingFailure
 
 -- | Ping to test the connection to stellard
 --
 -- >>> :set -XOverloadedStrings
 -- >>> pingStellar "https://test.stellar.org:9002"
 -- Just PingSuccess
-pingStellar :: T.StellarEndpoint -> IO (Maybe PingStatus)
-pingStellar e = (pingStellar' e defaultPingRequest) `E.catch` (\(_ :: E.SomeException) -> return $ Just PingFailure)
-  where pingStellar' :: T.StellarEndpoint -> PingRequest -> IO (Maybe PingStatus)
+pingStellar :: T.StellarEndpoint -> IO PingStatus
+pingStellar e = (pingStellar' e defaultPingRequest) `E.catch` pingHandler
+  where pingHandler = (\(_ :: E.SomeException) -> return $ pingFailure)
+        pingStellar' :: T.StellarEndpoint -> PingRequest -> IO PingStatus
         pingStellar' endpoint ping = do
           r <- makeRequest endpoint ping
-          return $ fmap toPingStatus $ decode r
+          return $ fromMaybe pingFailure (fmap toPingStatus (decode r))
 
 makeRequest :: (ToJSON a) => T.StellarEndpoint -> a -> IO (LBS.ByteString)
 makeRequest (T.Endpoint x) v = do

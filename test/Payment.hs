@@ -22,7 +22,7 @@ main = hspec $ do
       (encode paymentParams1) `shouldBe` paymentEncodeResult
     it "Correctly decodes payment results" $
       ((fromJust ((decode result1) :: Maybe SubmissionResponse)) ^. status) `shouldBe` SubmissionSuccess
-      
+
 paymentEncodeResult = "{\"params\":\
                         \[{\"secret\":\"2secret\"\
                          \,\"tx_json\":\
