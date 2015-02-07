@@ -14,5 +14,3 @@ main = hspec $ do
     it "returns Left PingFailure when everything is not ok" $ do
       res <- pingStellar (Endpoint "https://google.com")
       res `shouldBe` (Left PingFailure)
-
-
