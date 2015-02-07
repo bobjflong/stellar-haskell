@@ -18,7 +18,7 @@ import           Web.Stellar.Types
 
 main = hspec $ do
   describe "Encoding" $ do
-    it "Correct encodes payment params" $
+    it "Correctly encodes payment params" $
       (encode paymentParams1) `shouldBe` paymentEncodeResult
     it "Correctly decodes payment results" $
       ((fromJust ((decode result1) :: Maybe SubmissionResponse)) ^. status) `shouldBe` SubmissionSuccess
