@@ -9,7 +9,7 @@ main :: IO ()
 main = hspec $ do
   describe "pingStellar" $ do
     it "returns Right PingSuccess when everything is ok" $ do
-      res <- pingStellar (Endpoint "https://test.stellar.org:9002")
+      res <- pingStellar (Endpoint "http://localhost:5005")
       res `shouldBe` (Right PingSuccess)
     it "returns Left PingFailure when everything is not ok" $ do
       res <- pingStellar (Endpoint "https://google.com")
