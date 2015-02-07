@@ -17,10 +17,10 @@ import           Web.Stellar.Payment
 import           Web.Stellar.Types
 
 main = hspec $ do
-  describe "Encoding" $ do
-    it "Correctly encodes payment params" $
+  describe "Payment encoding/decoding" $ do
+    it "correctly encodes payment params" $
       (encode paymentParams1) `shouldBe` paymentEncodeResult
-    it "Correctly decodes payment results" $
+    it "correctly decodes payment results" $
       ((fromJust ((decode result1) :: Maybe SubmissionResponse)) ^. status) `shouldBe` SubmissionSuccess
 
 paymentEncodeResult = "{\"params\":\

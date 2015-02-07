@@ -14,16 +14,16 @@ import           Test.HUnit
 import           Web.Stellar.Types
 
 main = hspec $ do
-  describe "engine errors" $ do
+  describe "Engine errors during submission" $ do
     it "should report as an error" $ do
       (sequenceError ^. status) `shouldBe` SubmissionError
     it "should give a correct error message" $ do
       (fromJust $ sequenceError ^. errorMessage) `shouldBe` "This sequence number has already past."
-  describe "stellar errors" $ do
+  describe "Stellar errors during submission" $ do
     it "should report as an error" $ do
       (stellarError ^. status) `shouldBe` SubmissionError
-  describe "normal operation" $ do
-    it "should be ok" $ do
+  describe "Normal operation" $ do
+    it "should not report errors" $ do
       (submissionOK ^. status) `shouldBe` SubmissionSuccess
 
 sequenceError :: SubmissionResponse

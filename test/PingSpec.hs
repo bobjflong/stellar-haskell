@@ -7,7 +7,7 @@ import           Web.Stellar.Types
 
 main :: IO ()
 main = hspec $ do
-  describe "pingStellar" $ do
+  describe "Pinging Stellar" $ do
     it "returns Right PingSuccess when everything is ok" $ do
       res <- pingStellar (Endpoint "http://localhost:5005")
       res `shouldBe` (Right PingSuccess)
