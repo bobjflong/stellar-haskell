@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
-module Payment where
+module PaymentSpec (spec) where
 
 import           Control.Applicative
 import           Control.Lens        hiding ((.=))
@@ -16,7 +16,7 @@ import           Test.HUnit
 import           Web.Stellar.Payment
 import           Web.Stellar.Types
 
-main = hspec $ do
+spec = do
   describe "Payment encoding/decoding" $ do
     it "correctly encodes payment params" $
       (encode paymentParams1) `shouldBe` paymentEncodeResult

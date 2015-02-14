@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Submission where
+module SubmissionSpec (spec) where
 
 import           Control.Lens               hiding ((.=))
 import           Data.Aeson
@@ -13,7 +13,7 @@ import           Test.Hspec
 import           Test.HUnit
 import           Web.Stellar.Types
 
-main = hspec $ do
+spec = do
   describe "Engine errors during submission" $ do
     it "should report as an error" $ do
       (sequenceError ^. status) `shouldBe` SubmissionError

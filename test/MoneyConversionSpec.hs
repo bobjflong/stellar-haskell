@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module MoneyConversion where
+module MoneyConversionSpec (spec) where
 
 import           Control.Lens            hiding (elements)
 import           Data.Text
@@ -23,7 +23,7 @@ instance Arbitrary AccountLine where
                  limitPeer <- genNumericText
                  return $ AccountLine acc bal currency limit limitPeer
 
-main = hspec $ do
+spec = do
   describe "MoneyLens laws" $ do
     it "sets what it gets" $
       property $ \v -> v == (balance .~ (v ^. balance) $ v)

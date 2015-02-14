@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
-module OfferCreate where
+module OfferCreateSpec (spec) where
 
 import           Control.Applicative
 import           Control.Lens        hiding ((.=))
@@ -17,8 +17,8 @@ import           Web.Stellar.Offer
 import           Web.Stellar.Signing
 import           Web.Stellar.Types
 
-main :: IO ()
-main = hspec $ do
+spec :: Spec
+spec = do
   describe "Offer signing/encoding" $ do
     it "correctly signs offer create params" $ do
       result <- signRequest (Endpoint "http://localhost:5005") (toSignRequest offerCreateParams1)

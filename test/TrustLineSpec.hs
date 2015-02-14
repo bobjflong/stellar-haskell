@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
-module TrustLine where
+module TrustLineSpec (spec) where
 
 import           Data.Text
 import           Prelude               hiding (sequence)
@@ -11,7 +11,7 @@ import           Web.Stellar.Signing
 import           Web.Stellar.TrustLine
 import           Web.Stellar.Types
 
-main = hspec $ do
+spec =  do
   describe "Trust set signing" $ do
     it "should work" $ do
       signing <- signRequest (Endpoint "http://localhost:5005") (toSignRequest trustSetParams1)

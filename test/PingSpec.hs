@@ -1,12 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+module PingSpec (spec) where
+
 import           System.IO.Unsafe
 import           Test.Hspec
 import           Web.Stellar.Request
 import           Web.Stellar.Types
 
-main :: IO ()
-main = hspec $ do
+spec :: Spec
+spec = do
   describe "Pinging Stellar" $ do
     it "returns Right PingSuccess when everything is ok" $ do
       res <- pingStellar (Endpoint "http://localhost:5005")
