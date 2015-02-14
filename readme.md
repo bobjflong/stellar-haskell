@@ -25,6 +25,10 @@ You'll need to set OverloadedStrings in GHCi:
 * [Submitting payments](#account_make_payment)
 * [Signing requests](#sign_request)
 
+### See also
+
+* [Running tests](#tests)
+
 <a name="ping"></a>
 
 ### Pinging stellard
@@ -270,4 +274,14 @@ It's not great to pass your secret to untrusted servers. The state of local sign
 
 > (fromJust finalResponse) ^. status
 SubmissionSuccess
+```
+
+<a name="tests"></a>
+
+### Running tests
+
+Requires an active `stellard` instance running at `localhost:5005`:
+
+```shell
+cabal exec sh test.sh
 ```
