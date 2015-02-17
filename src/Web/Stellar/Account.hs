@@ -78,21 +78,13 @@ instance FromJSON AccountData where
     AccountData <$> ((v .: "result") >>= (.: "account_data"))
   parseJSON _ = mzero
 
-data AccountInfoRequest = AccountInfoRequest {
-  account :: Text
-}
-
-instance ToJSON AccountInfoRequest where
-  toJSON accountInfoRequest = object [
-    "method" .= ("account_info" :: Text),
-    "params" .= [object ["account" .= (account accountInfoRequest)]]]
-
 -- | Fetch account information for an Account ID
 --
 -- >>> r <- fetchAccount "https://test.stellar.org:9002" "abcdef..."
 fetchAccount :: StellarEndpoint -> AccountID -> IO (Maybe Account)
-fetchAccount endpoint (AccountID accountId) = do
+fetchAccount endpoint (AccountID aid) = do
   accountData <- fetchTestAccountData
   return $ fmap innerAccount accountData
   where fetchTestAccountData :: IO (Maybe AccountData)
-        fetchTestAccountData = fmap decode $ makeRequest endpoint $ AccountInfoRequest accountId
+        fetchTestAccountData = fmap decode $ makeRequest endpoint request
+        request = simpleRequest & method .~ "account_info" & accountId .~ aid
