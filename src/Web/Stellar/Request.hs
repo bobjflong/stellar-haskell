@@ -4,6 +4,7 @@
 {-# LANGUAGE TemplateHaskell     #-}
 
 module Web.Stellar.Request (
+  module Web.Stellar.Types,
   PingResponse,
   pingStellar,
   PingStatus,
@@ -21,7 +22,7 @@ import qualified Data.ByteString.Lazy as LBS
 import           Data.Text
 import           GHC.Generics
 import           Network.Wreq
-import qualified Web.Stellar.Types    as T
+import Web.Stellar.Types
 import Data.Maybe
 
 data PingRequest = PingRequest {
@@ -31,7 +32,7 @@ data PingRequest = PingRequest {
 instance ToJSON PingRequest
 
 defaultPingRequest :: PingRequest
-defaultPingRequest = PingRequest { method = "ping" }
+defaultPingRequest = PingRequest { Web.Stellar.Request.method = "ping" }
 
 data PingResponse = PingResponse Text deriving (Show)
 instance FromJSON PingResponse where
@@ -57,16 +58,16 @@ toPingStatus (PingResponse x) = if x == "success" then pingSuccess else pingFail
 -- >>> :set -XOverloadedStrings
 -- >>> pingStellar "https://test.stellar.org:9002"
 -- Just PingSuccess
-pingStellar :: T.StellarEndpoint -> IO PingStatus
+pingStellar :: StellarEndpoint -> IO PingStatus
 pingStellar e = (pingStellar' e defaultPingRequest) `E.catch` pingHandler
   where pingHandler = (\(_ :: E.SomeException) -> return $ pingFailure)
-        pingStellar' :: T.StellarEndpoint -> PingRequest -> IO PingStatus
+        pingStellar' :: StellarEndpoint -> PingRequest -> IO PingStatus
         pingStellar' endpoint ping = do
           r <- makeRequest endpoint ping
           return $ fromMaybe pingFailure (fmap toPingStatus (decode r))
 
-makeRequest :: (ToJSON a) => T.StellarEndpoint -> a -> IO (LBS.ByteString)
-makeRequest (T.Endpoint x) v = do
+makeRequest :: (ToJSON a) => StellarEndpoint -> a -> IO (LBS.ByteString)
+makeRequest (Endpoint x) v = do
   r <- post (unpack x) (toJSON v)
   return $ r ^. responseBody
 
