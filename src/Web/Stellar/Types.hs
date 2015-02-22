@@ -27,9 +27,9 @@ import           Data.Aeson.Types
 import           Data.Fixed
 import           Data.Text
 
-newtype AccountID = AccountID Text
+newtype AccountID = AccountID Text deriving (Eq, Show)
 
-newtype StellarEndpoint = Endpoint Text
+newtype StellarEndpoint = Endpoint Text deriving (Eq, Show)
 
 type Money = Fixed E12
 
