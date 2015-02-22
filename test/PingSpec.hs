@@ -2,7 +2,6 @@
 
 module PingSpec (spec) where
 
-import           System.IO.Unsafe
 import           Test.Hspec
 import           Web.Stellar.Request
 

@@ -3,15 +3,10 @@
 
 module OfferCreateSpec (spec) where
 
-import           Control.Applicative
 import           Control.Lens        hiding ((.=))
-import           Control.Monad       hiding (sequence)
 import           Data.Aeson
-import           Data.Fixed
-import           Data.Maybe
 import           Data.Text
 import           Prelude             hiding (sequence)
-import           System.IO.Unsafe
 import           Test.Hspec
 import           Web.Stellar.Offer
 import           Web.Stellar.Signing

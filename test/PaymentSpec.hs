@@ -3,16 +3,12 @@
 
 module PaymentSpec (spec) where
 
-import           Control.Applicative
 import           Control.Lens        hiding ((.=))
-import           Control.Monad       hiding (sequence)
 import           Data.Aeson
-import           Data.Fixed
 import           Data.Maybe
 import           Data.Text
 import           Prelude             hiding (sequence)
 import           Test.Hspec
-import           Test.HUnit
 import           Web.Stellar.Payment
 import           Web.Stellar.Types
 

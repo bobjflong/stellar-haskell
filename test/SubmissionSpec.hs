@@ -10,7 +10,6 @@ import           Data.Text
 import           Prelude                    hiding (sequence)
 import           System.IO.Unsafe
 import           Test.Hspec
-import           Test.HUnit
 import           Web.Stellar.Types
 
 spec = do
