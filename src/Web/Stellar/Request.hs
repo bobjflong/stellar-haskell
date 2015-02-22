@@ -19,11 +19,11 @@ import           Control.Lens         hiding ((.=))
 import           Control.Monad
 import           Data.Aeson
 import qualified Data.ByteString.Lazy as LBS
+import           Data.Maybe
 import           Data.Text
 import           GHC.Generics
 import           Network.Wreq
-import Web.Stellar.Types
-import Data.Maybe
+import           Web.Stellar.Types
 
 data PingRequest = PingRequest {
   method :: Text
