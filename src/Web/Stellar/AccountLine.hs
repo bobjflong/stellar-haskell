@@ -16,6 +16,8 @@ import           Control.Lens        hiding ((.=))
 import           Control.Monad
 import           Data.Aeson
 import           Data.Text
+import           Test.QuickCheck     hiding (elements)
+import qualified Test.QuickCheck     as QC
 import           Web.Stellar.Request
 import           Web.Stellar.Types
 
@@ -42,6 +44,20 @@ data AccountLine = AccountLine {
   _limitData     :: Text,
   _limitPeerData :: Text
 } deriving (Show, Eq)
+
+genNumericText :: Gen Text
+genNumericText = fmap pack $ listOf $ QC.elements ['1'..'9']
+
+genSafeText :: Gen Text
+genSafeText = fmap pack $ listOf $ QC.elements ['a'..'z']
+
+instance Arbitrary AccountLine where
+  arbitrary = do acc <- genSafeText
+                 bal <- genNumericText
+                 currency <- genSafeText
+                 limit <- genNumericText
+                 limitPeer <- genNumericText
+                 return $ AccountLine acc bal currency limit limitPeer
 
 $(makeLenses ''AccountLine)
 
