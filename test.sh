@@ -1,1 +1,1 @@
-runhaskell -itest -isrc test/Spec.hs
+runhaskell -itest -isrc test/Tests.hs

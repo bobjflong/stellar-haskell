@@ -33,7 +33,7 @@ library
   -- other-extensions:
   build-depends:       base >=4.6 && <4.8,
                        wreq == 0.3.0.1,
-                       lens == 4.7,
+                       lens,
                        bytestring,
                        text,
                        aeson,
