@@ -283,5 +283,7 @@ SubmissionSuccess
 Requires an active `stellard` instance running at `localhost:5005`:
 
 ```shell
-cabal exec sh test.sh
+> cabal install --enable-tests
+
+> cabal test
 ```
