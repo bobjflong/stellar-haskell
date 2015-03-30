@@ -10,7 +10,6 @@ import           Data.Text
 import           Prelude             hiding (sequence)
 import           Web.Stellar.Request
 import qualified Web.Stellar.Signing as S
-import           Web.Stellar.Types
 
 data OfferCreateParams = OfferCreateParams {
   _account   :: Text,

@@ -31,7 +31,6 @@ import           Data.Text
 import qualified Data.Text            as T
 import           Web.Stellar.Internal
 import           Web.Stellar.Request
-import           Web.Stellar.Types
 
 data Transaction = Transaction {
   _transactionAccount   :: Text,

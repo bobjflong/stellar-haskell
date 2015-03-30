@@ -11,7 +11,6 @@ import           Data.Aeson
 import           Data.Text
 import           GHC.Generics
 import           Web.Stellar.Request
-import           Web.Stellar.Types
 
 data AccountCurrency = AccountCurrency {
   receive_currencies :: [Text],

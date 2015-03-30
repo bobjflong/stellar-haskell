@@ -20,7 +20,6 @@ import           Data.Text
 import           Prelude             hiding (sequence)
 import           Web.Stellar.Request
 import qualified Web.Stellar.Signing as S
-import           Web.Stellar.Types
 
 -- | Describes an API request to send a payment
 --

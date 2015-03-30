@@ -19,7 +19,6 @@ import           Data.Text
 import           Test.QuickCheck     hiding (elements)
 import qualified Test.QuickCheck     as QC
 import           Web.Stellar.Request
-import           Web.Stellar.Types
 
 -- | Provides a lens interface onto a Stellar Trust Line
 --

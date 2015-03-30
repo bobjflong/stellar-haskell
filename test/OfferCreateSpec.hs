@@ -5,7 +5,6 @@ module OfferCreateSpec (spec) where
 
 import           Control.Lens        hiding ((.=))
 import           Data.Aeson
-import           Data.Text
 import           Prelude             hiding (sequence)
 import           Test.Hspec
 import           Web.Stellar.Offer

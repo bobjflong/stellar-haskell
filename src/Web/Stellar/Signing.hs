@@ -20,7 +20,6 @@ import           Data.Aeson
 import           Data.Text
 import           Prelude             hiding (sequence)
 import           Web.Stellar.Request
-import           Web.Stellar.Types
 
 data SignRequest = SignRequest {
   _signSecret :: Text,
