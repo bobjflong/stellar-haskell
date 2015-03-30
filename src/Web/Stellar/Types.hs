@@ -99,18 +99,18 @@ $(makeLenses ''SubmissionResponse)
 instance FromJSON SubmissionResponse where
   parseJSON (Object v) = do
     code <- engineCode
-    status <- stellarStatus
+    stellarStatusResult <- stellarStatus
     case code of
       -- Select between the engine_message or the error_message heuristically using the
       -- engine_status_code
       0 ->
-        case status of
-          "success" -> SubmissionResponse SubmissionSuccess <$> errorMessage
-          _ -> SubmissionResponse SubmissionError <$> errorMessage
+        case stellarStatusResult of
+          "success" -> SubmissionResponse SubmissionSuccess <$> givenErrorMessage
+          _ -> SubmissionResponse SubmissionError <$> givenErrorMessage
       _ -> SubmissionResponse SubmissionError <$> engineMessage
     where r = (v .: "result")
           stellarStatus = r >>= (.: "status") :: Parser String
-          errorMessage = r >>= (.:? "error_message")
+          givenErrorMessage = r >>= (.:? "error_message")
           engineCode = r >>= (\o -> o .:? "engine_result_code" .!= 0) :: Parser Int
           engineMessage = r >>= (.:? "engine_result_message")
   parseJSON _ = mzero

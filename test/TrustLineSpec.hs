@@ -3,7 +3,6 @@
 
 module TrustLineSpec (spec) where
 
-import           Data.Text
 import           Prelude               hiding (sequence)
 import           Test.Hspec
 import           Web.Stellar.Signing

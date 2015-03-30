@@ -19,7 +19,6 @@ import           Control.Monad
 import           Data.Aeson
 import           Data.Text
 import           Web.Stellar.Request
-import           Web.Stellar.Types
 
 -- | Provides a lens interface onto a Stellar account
 --
