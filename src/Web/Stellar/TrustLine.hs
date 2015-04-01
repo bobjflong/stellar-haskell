@@ -14,8 +14,8 @@ import qualified Web.Stellar.Signing as S
 data TrustSetParams = TrustSetParams {
   _paymentAmount :: APIAmount,
   _secret        :: Text,
-  _account       :: Text,
-  _flags         :: !Int,
+  _account       :: AccountID,
+  _flags         :: !Flags,
   _sequence      :: !Int
 } deriving (Eq, Show)
 
@@ -44,7 +44,7 @@ instance S.SignableRequest TrustSetParams where
   secretToUse = flip (^.) secret
 
 defaultTrustSetParams :: TrustSetParams
-defaultTrustSetParams = TrustSetParams defaultMoney mempty mempty 0 0
+defaultTrustSetParams = TrustSetParams defaultMoney mempty (AccountID mempty) (Flags 0) 0
   where defaultMoney = WithCurrency (CurrencyCode mempty) (Issuer mempty) 0
 
 setTrust :: StellarEndpoint -> TrustSetParams -> IO (Maybe SubmissionResponse)

@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes        #-}
 {-# LANGUAGE TemplateHaskell   #-}
@@ -16,7 +17,8 @@ module Web.Stellar.Types (
     SubmissionStatus(..),
     errorMessage,
     status,
-    APIAmount(..)
+    APIAmount(..),
+    Flags(..)
   ) where
 
 import           Control.Applicative
@@ -26,12 +28,17 @@ import           Data.Aeson
 import           Data.Aeson.Types
 import           Data.Fixed
 import           Data.Text
+import           GHC.Generics        (Generic)
 
-newtype AccountID = AccountID Text deriving (Eq, Show)
+newtype AccountID = AccountID Text deriving (Eq, Show, Generic)
+instance ToJSON AccountID
 
 newtype StellarEndpoint = Endpoint Text deriving (Eq, Show)
 
 type Money = Fixed E12
+
+newtype Flags = Flags Int deriving (Eq, Show, Generic)
+instance ToJSON Flags
 
 moneyLens :: (Lens' a Text) -> Lens' a (Maybe Money)
 moneyLens l = lens g s

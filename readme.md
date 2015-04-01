@@ -189,11 +189,11 @@ Nothing
 -- Currency, Issuer, Amount triple
 > let trustAmount = WithCurrency (CurrencyCode "USD") (Issuer "gBAde4mkDijZatAdNhBzCsuC7GP4MzhA3B") 1
 
-> let trustParams = defaultTrustSetParams & paymentAmount .~ trustAmount &
-                                             secret .~ "..." &
-                                             account .~ "..." &
-                                             flags .~ 131072 &
-                                             sequence .~ 123
+> let trustParams = defaultTrustSetParams & paymentAmount .~ (WithMicroStellars 1) &
+                                                secret .~ "..." &
+                                                account .~ (AccountID "...") &
+                                                flags .~ (Flags 131072) &
+                                                sequence .~ 123
 
 > r <- setTrust (Endpoint "https://test.stellar.org:9002") trustParams
 
