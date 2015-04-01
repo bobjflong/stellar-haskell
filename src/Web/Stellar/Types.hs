@@ -18,7 +18,9 @@ module Web.Stellar.Types (
     errorMessage,
     status,
     APIAmount(..),
-    Flags(..)
+    Flags(..),
+    Secret(..),
+    Sequence(..)
   ) where
 
 import           Control.Applicative
@@ -32,6 +34,12 @@ import           GHC.Generics        (Generic)
 
 newtype AccountID = AccountID Text deriving (Eq, Show, Generic)
 instance ToJSON AccountID
+
+newtype Secret = Secret Text deriving (Eq, Show, Generic)
+instance ToJSON Secret
+
+newtype Sequence = Sequence Int deriving (Eq, Show, Generic)
+instance ToJSON Sequence
 
 newtype StellarEndpoint = Endpoint Text deriving (Eq, Show)
 

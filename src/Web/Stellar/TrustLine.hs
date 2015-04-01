@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
+{-# LANGUAGE ViewPatterns      #-}
 
 module Web.Stellar.TrustLine where
 
@@ -13,10 +14,10 @@ import qualified Web.Stellar.Signing as S
 
 data TrustSetParams = TrustSetParams {
   _paymentAmount :: APIAmount,
-  _secret        :: Text,
+  _secret        :: Secret,
   _account       :: AccountID,
   _flags         :: !Flags,
-  _sequence      :: !Int
+  _sequence      :: !Sequence
 } deriving (Eq, Show)
 
 $(makeLenses ''TrustSetParams)
@@ -41,10 +42,10 @@ txJSON p = object [
 
 instance S.SignableRequest TrustSetParams where
   txJSONToSign = txJSON
-  secretToUse = flip (^.) secret
+  secretToUse (flip (^.) secret -> Secret s) = s
 
 defaultTrustSetParams :: TrustSetParams
-defaultTrustSetParams = TrustSetParams defaultMoney mempty (AccountID mempty) (Flags 0) 0
+defaultTrustSetParams = TrustSetParams defaultMoney (Secret mempty) (AccountID mempty) (Flags 0) (Sequence 0)
   where defaultMoney = WithCurrency (CurrencyCode mempty) (Issuer mempty) 0
 
 setTrust :: StellarEndpoint -> TrustSetParams -> IO (Maybe SubmissionResponse)
