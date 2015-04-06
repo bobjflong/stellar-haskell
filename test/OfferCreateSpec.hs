@@ -24,9 +24,9 @@ gets = WithCurrency (CurrencyCode "USD") (Issuer "ganVp9o5emfzpwrG5QVUXqMv8AgLcd
 pays = WithCurrency (CurrencyCode "BTC") (Issuer "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb") 1
 offerCreateParams1 = defaultOfferParams & takerGets .~ gets &
                                           takerPays .~ pays &
-                                          sequence .~ 123 &
-                                          account .~ "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb" &
-                                          secret .~ "s3q5ZGX2ScQK2rJ4JATp7rND6X5npG3De8jMbB7tuvm2HAVHcCN"
+                                          sequence .~ (Sequence 123) &
+                                          account .~ (AccountID "ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb") &
+                                          secret .~ (Secret "s3q5ZGX2ScQK2rJ4JATp7rND6X5npG3De8jMbB7tuvm2HAVHcCN")
 
 offerCreateParams1Encoded = "{\"params\":[{\"secret\":\"s3q5ZGX2ScQK2rJ4JATp7rND6X5npG3De8jMbB7tuvm2HAVHcCN\",\"tx_json\":{\"TransactionType\":\"OfferCreate\",\"TakerPays\":{\"value\":\"1\",\"currency\":\"BTC\",\"issuer\":\"ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb\"},\"Account\":\"ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb\",\"TakerGets\":{\"value\":\"1\",\"currency\":\"USD\",\"issuer\":\"ganVp9o5emfzpwrG5QVUXqMv8AgLcdvySb\"},\"Sequence\":123}}],\"method\":\"submit\"}"
 

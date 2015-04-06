@@ -214,11 +214,11 @@ SubmissionSuccess
 
 > let pays = WithCurrency (CurrencyCode "BTC") (Issuer "...") 2.5
 
-> let offerParams = defaultOfferParams & account .~ "..." &
+> let offerParams = defaultOfferParams & account .~ (AccountID "...") &
                                          takerGets .~ gets &
                                          takerPays .~ pays &
-                                         sequence .~ 123 &
-                                         secret .~ "..."
+                                         sequence .~ (Sequence 123) &
+                                         secret .~ (Secret "...")
 
 > r <- offerCreate (Endpoint "https://test.stellar.org:9002") offerParams
 

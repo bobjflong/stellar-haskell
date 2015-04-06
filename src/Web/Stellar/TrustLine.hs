@@ -45,7 +45,7 @@ instance S.SignableRequest TrustSetParams where
   secretToUse (flip (^.) secret -> Secret s) = s
 
 defaultTrustSetParams :: TrustSetParams
-defaultTrustSetParams = TrustSetParams defaultMoney (Secret mempty) (AccountID mempty) (Flags 0) (Sequence 0)
+defaultTrustSetParams = TrustSetParams defaultMoney mempty mempty (Flags 0) (Sequence 0)
   where defaultMoney = WithCurrency (CurrencyCode mempty) (Issuer mempty) 0
 
 setTrust :: StellarEndpoint -> TrustSetParams -> IO (Maybe SubmissionResponse)

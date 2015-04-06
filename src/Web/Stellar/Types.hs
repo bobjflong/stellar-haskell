@@ -26,6 +26,7 @@ module Web.Stellar.Types (
 import           Control.Applicative
 import           Control.Lens        hiding ((.=))
 import           Control.Monad
+import           Data.Monoid
 import           Data.Aeson
 import           Data.Aeson.Types
 import           Data.Fixed
@@ -33,9 +34,19 @@ import           Data.Text
 import           GHC.Generics        (Generic)
 
 newtype AccountID = AccountID Text deriving (Eq, Show, Generic)
+
 instance ToJSON AccountID
 
+instance Monoid AccountID where
+  mempty = AccountID mempty
+  mappend (AccountID m) (AccountID m') = AccountID (mappend m m')
+
 newtype Secret = Secret Text deriving (Eq, Show, Generic)
+
+instance Monoid Secret where
+  mempty = Secret mempty
+  mappend (Secret m) (Secret m') = Secret (mappend m m')
+
 instance ToJSON Secret
 
 newtype Sequence = Sequence Int deriving (Eq, Show, Generic)

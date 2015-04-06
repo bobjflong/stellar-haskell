@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
+{-# LANGUAGE ViewPatterns      #-}
 
 module Web.Stellar.Offer where
 
@@ -12,11 +13,11 @@ import           Web.Stellar.Request
 import qualified Web.Stellar.Signing as S
 
 data OfferCreateParams = OfferCreateParams {
-  _account   :: Text,
+  _account   :: AccountID,
   _takerGets :: APIAmount,
   _takerPays :: APIAmount,
-  _sequence  :: !Int,
-  _secret    :: Text
+  _sequence  :: !Sequence,
+  _secret    :: Secret
 } deriving (Eq, Show)
 
 $(makeLenses ''OfferCreateParams)
@@ -41,12 +42,12 @@ txJSON p = object [
 
 -- | Default offer parameters
 defaultOfferParams :: OfferCreateParams
-defaultOfferParams = OfferCreateParams mempty defaultMoney defaultMoney 0 mempty
+defaultOfferParams = OfferCreateParams mempty defaultMoney defaultMoney (Sequence 0) mempty
   where defaultMoney = WithCurrency (CurrencyCode mempty) (Issuer mempty) 0
 
 instance S.SignableRequest OfferCreateParams where
   txJSONToSign = txJSON
-  secretToUse = flip (^.) secret
+  secretToUse (flip (^.) secret -> Secret s) = s
 
 offerCreate :: StellarEndpoint -> OfferCreateParams -> IO (Maybe SubmissionResponse)
 offerCreate e p = makeRequest e p >>= (return.decode)
